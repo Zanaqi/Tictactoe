@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "time.h": "c"
+        "time.h": "c",
+        "*.tcc": "c",
+        "source_location": "c",
+        "stdlib.h": "c",
+        "gtk.h": "c"
     }
 }
