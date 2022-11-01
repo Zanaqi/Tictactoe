@@ -1,4 +1,4 @@
-Install gtk4
+To install gtk4 (windows)
 
 In MSYS2 shell, run:
 
