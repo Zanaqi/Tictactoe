@@ -7,5 +7,3 @@
 - highlight name label to show whose turn is it (ie when it's player 1 turn, player 1 name label change color, easier to keep track)
 
 - improve on imperfect algorithm, current one isnt that good
-
-- improve on gui, not perfect yet
