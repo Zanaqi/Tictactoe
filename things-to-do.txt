@@ -1,0 +1,11 @@
+- test data not completed (convert commented code into viewable gui)
+
+- for 2 player mode, instead of showing 'player 1 win' and 'player 2 win' in dialog, show the name
+
+- change color button at end of game to show winning line
+
+- highlight name label to show whose turn is it (ie when it's player 1 turn, player 1 name label change color, easier to keep track)
+
+- improve on imperfect algorithm, current one isnt that good
+
+- improve on gui, not perfect yet
