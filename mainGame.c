@@ -2,7 +2,7 @@
 
 #define TOTAL 958
 
-GtkWidget *main_window, *grid, *button, *space, *label, *player1, *player2, *play_again_btn, *main_menu_btn, *left_label, *right_label;
+GtkWidget *main_window, *grid, *button, *space, *label, *player1, *player2, *play_again_btn, *main_menu_btn, *left_label, *right_label, *x_label, *o_label;
 GtkWidget *square_btn[9];
 
 char dataset[TOTAL][10];
@@ -562,7 +562,7 @@ void computer_move(int player_move)
 /* Label for x and o, play again and main menu buttons, and 9 buttons to play tic tac toe */
 void gamescreen()
 {
-    GtkWidget *x_label, *o_label, *childs;
+    GtkWidget *childs;
     int x = 3, y = 3, i = 0;
 
     /*clear previous widgets*/
@@ -574,6 +574,7 @@ void gamescreen()
     }
 
     x_label = gtk_label_new("(X)");
+    gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>"); // player 1 start, bold x label
     o_label = gtk_label_new("(O)");
 
     /* space on the left */
@@ -672,12 +673,26 @@ static void replay(GtkWidget *widget, gpointer data)
     /* Update label */
     gtk_label_set_label(GTK_LABEL(left_label), right_player);
     gtk_label_set_label(GTK_LABEL(right_label), left_player);
-
-    if (current_player == 3) // If single player mode, change player mark
+    if (current_player == 2) // two player mode reset to player 1 start
+    {
+        current_player = 1;
+        gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>");
+        gtk_label_set_markup(GTK_LABEL(o_label), "(O)");
+    }
+    else if (current_player == 3) // If single player mode, change player mark
     {
         mark = (mark == 'X') ? 'O' : 'X'; // if current player mark is X, change to O, player is player 2
         if (mark == 'O')                  // if player is player 2, computer starts first
+        {
+            gtk_label_set_markup(GTK_LABEL(x_label), "(X)");
+            gtk_label_set_markup(GTK_LABEL(o_label), "<b>(O)</b>");
             computer_move(-1);
+        }
+        else
+        {
+            gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>");
+            gtk_label_set_markup(GTK_LABEL(o_label), "(O)");
+        }
     }
 }
 
@@ -785,38 +800,50 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         {
             square[index] = 'x';
             gtk_button_set_label(GTK_BUTTON(widget), "X");
-            current_player++;
+            k = checkwin(); // check if game has ended
+            if (k == 1)     // game ended, win
+            {
+                showdialog("We have a winner!", "Player 1 win");
+                end_game();
+            }
+            else
+            {
+                gtk_label_set_markup(GTK_LABEL(x_label), "(X)");
+                gtk_label_set_markup(GTK_LABEL(o_label), "<b>(O)</b>");
+                current_player++;
+            }
         }
         else if (current_player == 2) // player 2
         {
             square[index] = 'o';
             gtk_button_set_label(GTK_BUTTON(widget), "O");
-            current_player--;
+            k = checkwin(); // check if game has ended
+            if (k == 1)     // game ended, win
+            {
+                showdialog("We have a winner!", "Player 2 win");
+                end_game();
+            }
+            else
+            {
+                gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>");
+                gtk_label_set_markup(GTK_LABEL(o_label), "(O)");
+                current_player--;
+            }
         }
         /* Single player */
         else if (current_player == 3)
         {
             square[index] = mark;
             (mark == 'X') ? gtk_button_set_label(GTK_BUTTON(widget), "X") : gtk_button_set_label(GTK_BUTTON(widget), "O");
-        }
-        k = checkwin(); // check if game has ended
-        if (k == 1)     // game ended, win
-        {
-            if (current_player == 1)
-            {
-                showdialog("We have a winner!", "Player 1 win");
-            }
-            else if (current_player == 2)
-            {
-                showdialog("We have a winner!", "Player 2 win");
-            }
-            else if (current_player == 3)
+            k = checkwin(); // check if game has ended
+            if (k == 1)     // game ended, win
             {
                 showdialog("We have a winner!", "You win");
+                end_game();
             }
-            end_game();
         }
-        else if (k == 2) // game ended, draw
+
+        if (k == 2) // game ended, draw
         {
             showdialog("Game draw", "It's a draw!");
             end_game();
