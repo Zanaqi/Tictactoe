@@ -214,7 +214,7 @@ static void two_player_gamescreen(GtkWidget *widget, gpointer data)
     gtk_label_set_markup(GTK_LABEL(left_label), g_strdup_printf("<span size = 'large'>%s</span>", player1_name));
 
     right_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(left_label), g_strdup_printf("<span size = 'large'>%s</span>", player2_name));
+    gtk_label_set_markup(GTK_LABEL(right_label), g_strdup_printf("<span size = 'large'>%s</span>", player2_name));
 
     gamescreen(); // standard gamescreen
 }
