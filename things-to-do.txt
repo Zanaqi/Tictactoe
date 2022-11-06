@@ -1,7 +1,5 @@
 - test data not completed (convert commented code into viewable gui)
 
-- for 2 player mode, instead of showing 'player 1 win' and 'player 2 win' in dialog, show the name
-
 - change color button at end of game to show winning line
 
 - improve on gui, not perfect yet (ALMOST THERE)

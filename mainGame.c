@@ -205,8 +205,9 @@ static void two_player_gamescreen(GtkWidget *widget, gpointer data)
     current_player = 1;
     starting_player = 1;
     /* Get player nammes from previous screen and set label names */
-    player1_name = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player1)));
-    player2_name = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player2)));
+    player1_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player1))));
+    player2_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player2))));
+
     left_label = gtk_label_new(player1_name);
     right_label = gtk_label_new(player2_name);
 
@@ -372,8 +373,8 @@ void gamescreen()
     gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>"); // player 1 start, bold x label
     o_label = gtk_label_new("(O)");
 
-    right_score_label = gtk_label_new(g_strdup_printf("%d", player1_score));
-    left_score_label = gtk_label_new(g_strdup_printf("%d", player2_score));
+    right_score_label = gtk_label_new(g_strdup_printf("Score - %d", player1_score));
+    left_score_label = gtk_label_new(g_strdup_printf("Score - %d", player2_score));
     /* space on the left */
     space = gtk_label_new("");
 
@@ -472,9 +473,12 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
-                showdialog("We have a winner!", "Player 1 win");
+                if (*player1_name == '\0')
+                    showdialog("We have a winner!", "Player 1 win");
+                else
+                    showdialog("We have a winner!", g_strdup_printf("%s win", player1_name));
                 player1_score++;
-                gtk_label_set_text(GTK_LABEL(left_score_label), g_strdup_printf("%d", player1_score));
+                gtk_label_set_text(GTK_LABEL(left_score_label), g_strdup_printf("Score - %d", player1_score));
                 end_game();
             }
             else
@@ -491,9 +495,12 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
-                showdialog("We have a winner!", "Player 2 win");
+                if (*player2_name == '\0')
+                    showdialog("We have a winner!", "Player 2 win");
+                else
+                    showdialog("We have a winner!", g_strdup_printf("%s win", player2_name));
                 player2_score++;
-                gtk_label_set_text(GTK_LABEL(right_score_label), g_strdup_printf("%d", player2_score));
+                gtk_label_set_text(GTK_LABEL(right_score_label), g_strdup_printf("Score - %d", player2_score));
                 end_game();
             }
             else
@@ -513,7 +520,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             {
                 showdialog("We have a winner!", "You win");
                 player1_score++;
-                gtk_label_set_text(GTK_LABEL(left_score_label), g_strdup_printf("%d", player1_score));
+                gtk_label_set_text(GTK_LABEL(left_score_label), g_strdup_printf("Score - %d", player1_score));
                 end_game();
             }
         }
@@ -531,7 +538,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             {
                 showdialog("We have a winner!", "Computer win");
                 player2_score++;
-                gtk_label_set_text(GTK_LABEL(right_score_label), g_strdup_printf("%d", player2_score));
+                gtk_label_set_text(GTK_LABEL(right_score_label), g_strdup_printf("Score - %d", player2_score));
                 end_game();
             }
             else if (k == 2) // draw
