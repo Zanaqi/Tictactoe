@@ -185,13 +185,15 @@ static void two_player(GtkWidget *widget, gpointer data)
     gtk_grid_attach(GTK_GRID(grid), player2, 14, 12, 8, 1);
 
     /* Start button */
-    button = gtk_button_new_with_label("Start");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player_gamescreen), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Start</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 15, 8, 1);
 
     /* Back button to go back to main menu */
-    button = gtk_button_new_with_label("Back");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Back</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 2, 29, 4, 1);
 }
 
@@ -208,8 +210,11 @@ static void two_player_gamescreen(GtkWidget *widget, gpointer data)
     player1_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player1))));
     player2_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player2))));
 
-    left_label = gtk_label_new(player1_name);
-    right_label = gtk_label_new(player2_name);
+    left_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(left_label), g_strdup_printf("<span size = 'large'>%s</span>", player1_name));
+
+    right_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(left_label), g_strdup_printf("<span size = 'large'>%s</span>", player2_name));
 
     gamescreen(); // standard gamescreen
 }
@@ -233,25 +238,30 @@ static void single_player(GtkWidget *widget, gpointer data)
     gtk_grid_attach(GTK_GRID(grid), space, 22, 0, 14, 36);
 
     label = gtk_label_new("Choose your difficulty");
+    gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Choose your difficulty</span>");
     gtk_widget_set_size_request(label, 160, 20);
     gtk_grid_attach(GTK_GRID(grid), label, 14, 8, 8, 1);
 
     /* Difficulty buttons, each button links to different callback functions to change global variable 'difficulty' to change how computer plays */
-    button = gtk_button_new_with_label("Easy");
+    button = gtk_button_new_with_label("");
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(easy), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Easy</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 12, 8, 1);
 
-    button = gtk_button_new_with_label("Medium");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(medium), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Medium</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 14, 8, 1);
 
-    button = gtk_button_new_with_label("Hard");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(hard), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Hard</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 16, 8, 1);
 
     /* Back button to go back to main menu */
-    button = gtk_button_new_with_label("Back");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Back</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 2, 29, 4, 1);
 }
 
@@ -260,8 +270,11 @@ void singleplayer_gamescreen()
 {
     current_player = 3;
     starting_player = 1;
-    left_label = gtk_label_new("You");       // x
+    left_label = gtk_label_new(""); // x
+    gtk_label_set_markup(GTK_LABEL(left_label), "<span size = 'large'>You</span>");
+
     right_label = gtk_label_new("Computer"); // o
+    gtk_label_set_markup(GTK_LABEL(right_label), "<span size = 'large'>Computer</span>");
 
     gamescreen();
 }
@@ -344,8 +357,8 @@ void computer_move(int player_move)
     default:
         break;
     }
-    square[best_move] = com_mark;                                 // update square array
-    gtk_button_set_label(GTK_BUTTON(square_btn[best_move]), "O"); // change button label to computer mark
+    square[best_move] = com_mark;                                                                                           // update square array
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(square_btn[best_move])), "<span size = 'xx-large'>O</span>"); // change button label to computer mark
 }
 
 /* When game ends, set all square buttons to inactive, set play again button to be active*/
@@ -357,7 +370,7 @@ void end_game()
     }
 
     g_signal_handlers_disconnect_by_func(replay_btn, restart, NULL);
-    gtk_button_set_label(GTK_BUTTON(replay_btn), "Play Again");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(replay_btn)), "<span size = 'large'>Play Again</span>");
     g_signal_connect(replay_btn, "clicked", G_CALLBACK(replay), NULL);
 }
 
@@ -369,12 +382,16 @@ void gamescreen()
 
     clear_grid();
 
-    x_label = gtk_label_new("(X)");
-    gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>"); // player 1 start, bold x label
-    o_label = gtk_label_new("(O)");
+    x_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>"); // player 1 start, bold x label
+    o_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
 
-    right_score_label = gtk_label_new(g_strdup_printf("Score - %d", player1_score));
-    left_score_label = gtk_label_new(g_strdup_printf("Score - %d", player2_score));
+    right_score_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
+
+    left_score_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
     /* space on the left */
     space = gtk_label_new("");
 
@@ -387,12 +404,14 @@ void gamescreen()
     gtk_grid_attach(GTK_GRID(grid), space, 32, 0, 4, 36);
 
     /* play again button and main menu button */
-    replay_btn = gtk_button_new_with_label("Restart");
+    replay_btn = gtk_button_new_with_label("");
     g_signal_connect(replay_btn, "clicked", G_CALLBACK(restart), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(replay_btn)), "<span size = 'large'>Restart</span>");
     gtk_grid_attach(GTK_GRID(grid), replay_btn, 10, 4, 7, 1);
 
-    main_menu_btn = gtk_button_new_with_label("Main Menu");
+    main_menu_btn = gtk_button_new_with_label("");
     g_signal_connect(main_menu_btn, "clicked", G_CALLBACK(main_menu), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(main_menu_btn)), "<span size = 'large'>Main Menu</span>");
     gtk_grid_attach(GTK_GRID(grid), main_menu_btn, 19, 4, 7, 1);
 
     /* Align labels */
@@ -424,7 +443,7 @@ void gamescreen()
     /* nine buttons for tic tac toe game */
     for (i = 0; i < 9; i++)
     {
-        square_btn[i] = gtk_button_new();
+        square_btn[i] = gtk_button_new_with_label(NULL);
         gtk_widget_set_sensitive(square_btn[i], TRUE);
         gtk_widget_set_size_request(square_btn[i], 160, 160);
         g_signal_connect(square_btn[i], "clicked", G_CALLBACK(square_clicked), NULL);
@@ -469,7 +488,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         if (current_player == 1) // player 1
         {
             square[index] = 'X';
-            gtk_button_set_label(GTK_BUTTON(widget), "X");
+            gtk_label_set_markup(GTK_LABEL(gtk_widget_get_last_child(square_btn[index])), "<span size = 'xx-large'>X</span>");
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
@@ -478,20 +497,21 @@ static void square_clicked(GtkWidget *widget, gpointer data)
                 else
                     showdialog("We have a winner!", g_strdup_printf("%s win", player1_name));
                 player1_score++;
-                gtk_label_set_text(GTK_LABEL(left_score_label), g_strdup_printf("Score - %d", player1_score));
+                gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
                 end_game();
             }
             else
             {
-                gtk_label_set_markup(GTK_LABEL(x_label), "(X)");
-                gtk_label_set_markup(GTK_LABEL(o_label), "<b>(O)</b>");
+                gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
+                gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
                 current_player++;
             }
         }
         else if (current_player == 2) // player 2
         {
             square[index] = 'O';
-            gtk_button_set_label(GTK_BUTTON(widget), "O");
+            gtk_label_set_markup(GTK_LABEL(gtk_widget_get_last_child(square_btn[index])), "<span size = 'xx-large'>O</span>");
+
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
@@ -500,13 +520,13 @@ static void square_clicked(GtkWidget *widget, gpointer data)
                 else
                     showdialog("We have a winner!", g_strdup_printf("%s win", player2_name));
                 player2_score++;
-                gtk_label_set_text(GTK_LABEL(right_score_label), g_strdup_printf("Score - %d", player2_score));
+                gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
                 end_game();
             }
             else
             {
-                gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>");
-                gtk_label_set_markup(GTK_LABEL(o_label), "(O)");
+                gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
+                gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
                 current_player--;
             }
         }
@@ -514,13 +534,13 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         else if (current_player == 3)
         {
             square[index] = 'X';
-            gtk_button_set_label(GTK_BUTTON(widget), "X");
+            gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(widget)), "<span size = 'xx-large'>X</span>");
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
                 showdialog("We have a winner!", "You win");
                 player1_score++;
-                gtk_label_set_text(GTK_LABEL(left_score_label), g_strdup_printf("Score - %d", player1_score));
+                gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
                 end_game();
             }
         }
@@ -538,7 +558,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             {
                 showdialog("We have a winner!", "Computer win");
                 player2_score++;
-                gtk_label_set_text(GTK_LABEL(right_score_label), g_strdup_printf("Score - %d", player2_score));
+                gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
                 end_game();
             }
             else if (k == 2) // draw
@@ -568,7 +588,7 @@ static void replay(GtkWidget *widget, gpointer data)
     /* Set play again button back to restart */
     g_signal_connect(replay_btn, "clicked", G_CALLBACK(restart), NULL);
     g_signal_handlers_disconnect_by_func(replay_btn, replay, NULL);
-    gtk_button_set_label(GTK_BUTTON(replay_btn), "Restart");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(replay_btn)), "<span size = 'large'>Restart</span>");
 
     if (starting_player == 1)
     {
@@ -581,15 +601,15 @@ static void replay(GtkWidget *widget, gpointer data)
         else
         {
             current_player = 2;
-            gtk_label_set_markup(GTK_LABEL(x_label), "(X)");
-            gtk_label_set_markup(GTK_LABEL(o_label), "<b>(O)</b>");
+            gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
+            gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
         }
     }
     else
     {
         starting_player--;
-        gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>");
-        gtk_label_set_markup(GTK_LABEL(o_label), "(O)");
+        gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
+        gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
         if (current_player != 3)
             current_player = 1;
     }
@@ -609,8 +629,8 @@ static void restart(GtkWidget *widget, gpointer data)
     /* if starting player is 1, player 1 start again*/
     if (starting_player == 1)
     {
-        gtk_label_set_markup(GTK_LABEL(x_label), "<b>(X)</b>");
-        gtk_label_set_markup(GTK_LABEL(o_label), "(O)");
+        gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
+        gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
         /* if two player mode, current player set to player 1*/
         if (current_player != 3)
             current_player = 1;
@@ -623,8 +643,8 @@ static void restart(GtkWidget *widget, gpointer data)
         else
         /* if two player mode and starting player is 2, set current player to 2*/
         {
-            gtk_label_set_markup(GTK_LABEL(x_label), "(X)");
-            gtk_label_set_markup(GTK_LABEL(o_label), "<b>(O)</b>");
+            gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
+            gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
             current_player = 2;
         }
     }
@@ -659,20 +679,24 @@ static void main_menu(GtkWidget *widget, gpointer data)
     gtk_grid_attach(GTK_GRID(grid), space, 22, 0, 14, 36);
 
     /* buttons */
-    button = gtk_button_new_with_label("Single Player");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(single_player), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Single Player</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 10, 8, 1);
 
-    button = gtk_button_new_with_label("Two Player");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Two Player</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 12, 8, 1);
 
-    button = gtk_button_new_with_label("Test Data");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(test_data), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Test Data</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 14, 8, 1);
 
-    button = gtk_button_new_with_label("Quit");
+    button = gtk_button_new_with_label("");
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_window_destroy), main_window);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Quit</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 16, 8, 1);
 }
 
@@ -718,20 +742,24 @@ static void setup(GtkApplication *app, gpointer user_data)
     gtk_grid_attach(GTK_GRID(grid), space, 22, 0, 14, 36);
 
     /* buttons */
-    button = gtk_button_new_with_label("Single Player");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(single_player), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Single Player</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 10, 8, 1);
 
-    button = gtk_button_new_with_label("Two Player");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Two Player</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 12, 8, 1);
 
-    button = gtk_button_new_with_label("Test Data");
+    button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(test_data), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Test Data</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 14, 8, 1);
 
-    button = gtk_button_new_with_label("Quit");
+    button = gtk_button_new_with_label("");
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_window_destroy), main_window);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Quit</span>");
     gtk_grid_attach(GTK_GRID(grid), button, 14, 16, 8, 1);
 
     gtk_widget_show(main_window);
