@@ -432,7 +432,8 @@ void computer_move(int player_move)
         break;
     }
     square[best_move] = com_mark;                                                                                           // update square array
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(square_btn[best_move])), "<span size = 'xx-large'>O</span>"); // change button label to computer mark
+    GtkWidget *image = gtk_image_new_from_file ("O.png");
+    gtk_button_set_child (GTK_BUTTON (square_btn[best_move]), image); // change button label to computer mark
 }
 
 /* When game ends, set all square buttons to inactive, set play again button to be active*/
@@ -565,7 +566,9 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'X';
 
             // mark square btn
-            gtk_label_set_markup(GTK_LABEL(gtk_widget_get_last_child(square_btn[index])), "<span size = 'xx-large'>X</span>");
+            GtkWidget *image = gtk_image_new_from_file ("X.png");
+            gtk_button_set_child (GTK_BUTTON (widget), image);
+
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
@@ -592,7 +595,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'O';
 
             // mark square btn
-            gtk_label_set_markup(GTK_LABEL(gtk_widget_get_last_child(square_btn[index])), "<span size = 'xx-large'>O</span>");
+            GtkWidget *image = gtk_image_new_from_file ("O.png");
+            gtk_button_set_child (GTK_BUTTON (widget), image);
 
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
@@ -621,7 +625,9 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'X';
 
             // mark square btn
-            gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(widget)), "<span size = 'xx-large'>X</span>");
+            GtkWidget *image = gtk_image_new_from_file ("X.png");
+            gtk_button_set_child (GTK_BUTTON (widget), image);
+
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
