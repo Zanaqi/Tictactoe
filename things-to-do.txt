@@ -1,7 +1,5 @@
-- test data not completed (convert commented code into viewable gui)
+- pls check test data, not sure if thats what lawrence wants
 
 - change color button at end of game to show winning line
 
 - improve on gui, not perfect yet (ALMOST THERE)
-
-- font size issue - idk how change font for variables (ie label for player names in two player mode)

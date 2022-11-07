@@ -12,17 +12,34 @@ static void hard(GtkWidget *widget, gpointer data);
 
 static void two_player(GtkWidget *widget, gpointer data);
 static void two_player_gamescreen(GtkWidget *widget, gpointer data);
+
 static void singleplayer(GtkWidget *widget, gpointer data);
 void singleplayer_gamescreen();
 void computer_move();
-void gamescreen();
 
-static void main_menu(GtkWidget *widget, gpointer data);
-static void restart(GtkWidget *widget, gpointer data);
+void end_game();
+void gamescreen();
 static void square_clicked(GtkWidget *widget, gpointer data);
+
 static void replay(GtkWidget *widget, gpointer data);
+static void restart(GtkWidget *widget, gpointer data);
+
+void main_btns();
+static void main_menu(GtkWidget *widget, gpointer data);
 static void setup(GtkApplication *app, gpointer user_data);
+
 int main();
+
+typedef struct
+{
+    char *label_str;
+    int x;
+    int y;
+    int length;
+    int height;
+    int xalign_val;
+    GtkAlign valign_val;
+} label_struct;
 
 static void test_data(GtkWidget *widget, gpointer data)
 {
@@ -34,9 +51,28 @@ static void test_data(GtkWidget *widget, gpointer data)
     int tp = 0, tn = 0, fp = 0, fn = 0, k = 0;   // values for confusion matrix
 
     int positive = total_positive * 0.8;
-
-    float error = 0, total_testing = positive_testing + negative_testing;
+    float total_testing = positive_testing + negative_testing;
+    float error = 0.0, accuracy = 0.0;
     double p_probability, n_probability, p_posterior, n_posterior;
+
+    label_struct structlist[] = {
+        {"<span size = 'x-large'>Algorithm Used: Naive Bayes</span>", 13, 1, 12, 2, 0.5, GTK_ALIGN_START},
+        {g_strdup_printf("<span size = 'large'>Total Data Sets Trained: %d</span>", TOTAL), 14, 4, 10, 1, 0.5, GTK_ALIGN_START},
+        {g_strdup_printf("<span size = 'large'>Total Data Sets Tested: %1.0f</span>", total_testing), 14, 5, 10, 1, 0.5, GTK_ALIGN_END},
+        {g_strdup_printf("<span foreground = 'green' size = 'large'>True Positive (TP): %d</span>", tp), 7, 7, 10, 1, 1.0, GTK_ALIGN_START},
+        {g_strdup_printf("<span foreground = 'red' size = 'large'>False Positive (FP): %d</span>", fp), 21, 7, 10, 1, 0.0, GTK_ALIGN_START},
+        {g_strdup_printf("<span foreground = 'red' size = 'large'>False Negative (FN): %d</span>", fn), 7, 9, 10, 1, 1.0, GTK_ALIGN_END},
+        {g_strdup_printf("<span foreground = 'green' size = 'large'>True Negative (TN): %d</span>", tn), 21, 9, 10, 1, 0.0, GTK_ALIGN_END},
+        {g_strdup_printf("<span size = 'large'>Total number of error: %1.0f</span>", error), 14, 12, 10, 1, 0.5, GTK_ALIGN_END},
+        {g_strdup_printf("<span size = 'large'>Accuracy: %0.1f%%</span>", accuracy), 15, 13, 10, 1, 0.5, GTK_ALIGN_END},
+        {"<span size = 'large'>Probabilities:</span>", 16, 15, 6, 1, 0.5, GTK_ALIGN_END},
+        {"<span size = 'large'>'x' positive: </span>", 4, 16, 6, 1, 1.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'x' negative: </span>", 12, 16, 6, 1, 0.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'o' positive: </span>", 20, 16, 6, 1, 1.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'o' negative: </span>", 28, 16, 6, 1, 0.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'b' positive: </span>", 12, 36, 6, 1, 0.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'b' negative: </span>", 20, 36, 6, 1, 1.0, GTK_ALIGN_END},
+    };
 
     // test positive results
     for (int i = 0; i < positive_testing; i++)
@@ -112,32 +148,72 @@ static void test_data(GtkWidget *widget, gpointer data)
             tn++; // True Negative
     }
 
+    accuracy = ((total_testing - error) / total_testing) * 100;
     gtk_window_set_title(GTK_WINDOW(main_window), "Test Data");
-    gtk_grid_set_column_spacing(GTK_GRID(grid), 0);
+
     /*clear previous widgets*/
-    GtkWidget *childs = gtk_widget_get_first_child(grid);
-    while (childs != NULL)
+    clear_grid();
+
+    space = gtk_label_new(""); // space on top of window
+    gtk_grid_attach(GTK_GRID(grid), space, 0, 0, 36, 1);
+
+    for (int i = 0; i < 16; i++)
     {
-        gtk_grid_remove(GTK_GRID(grid), childs);
-        childs = gtk_widget_get_first_child(grid);
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), structlist[i].label_str);
+        gtk_grid_attach(GTK_GRID(grid), label, structlist[i].x, structlist[i].y, structlist[i].length, structlist[i].height);
+        gtk_label_set_xalign(GTK_LABEL(label), structlist[i].xalign_val);
+        gtk_widget_set_valign(label, structlist[i].valign_val);
     }
 
-    label = gtk_label_new("Total tested");
-    gtk_widget_set_size_request(label, 100, 20);
-    gtk_grid_attach(GTK_GRID(grid), space, 0, 0, 3, 1);
+    /* labels for data */
+    for (int i = 0; i < 9; i++)
+    {
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>pos[%d]: %0.6f</span>", i + 1, x_trained[i + 9]));
+        gtk_grid_attach(GTK_GRID(grid), label, 4, 17 + i, 6, 1);
+        gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+        gtk_widget_set_valign(label, GTK_ALIGN_END);
 
-    /*print results
-    printf("\n                    Total tested: %1.0f", (total_testing));
-    printf("\n---------------------------------------------------------");
-    printf("\n|      True Positive (TP)    |    False Positive (FP)     |");
-    printf("\n|              %d           |             %d             |", tp, fp);
-    printf("\n|---------------------------------------------------------|");
-    printf("\n|      False Negative (FN)   |    True Negative (TN)      |");
-    printf("\n|              %d            |             %d             |", fn, tn);
-    printf("\n---------------------------------------------------------");
-    printf("\nTotal number of error: %1.0f", error);
-    printf("\nAccuracy: %0.1f%% \n\n", (((total_testing - error) / total_testing) * 100));
-    */
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>pos[%d]: %0.6f</span>", i + 1, x_trained[i]));
+        gtk_grid_attach(GTK_GRID(grid), label, 12, 17 + i, 6, 1);
+        gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+        gtk_widget_set_valign(label, GTK_ALIGN_END);
+
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>pos[%d]: %0.6f</span>", i + 1, o_trained[i + 9]));
+        gtk_grid_attach(GTK_GRID(grid), label, 20, 17 + i, 6, 1);
+        gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+        gtk_widget_set_valign(label, GTK_ALIGN_END);
+
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>pos[%d]: %0.6f</span>", i + 1, o_trained[i]));
+        gtk_grid_attach(GTK_GRID(grid), label, 28, 17 + i, 6, 1);
+        gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+        gtk_widget_set_valign(label, GTK_ALIGN_END);
+
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>pos[%d]: %0.6f</span>", i + 1, b_trained[i + 9]));
+        gtk_grid_attach(GTK_GRID(grid), label, 12, 37 + i, 6, 1);
+        gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+        gtk_widget_set_valign(label, GTK_ALIGN_END);
+
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>pos[%d]: %0.6f</span>", i + 1, b_trained[i]));
+        gtk_grid_attach(GTK_GRID(grid), label, 20, 37 + i, 6, 1);
+        gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+        gtk_widget_set_valign(label, GTK_ALIGN_END);
+    }
+
+    space = gtk_label_new("");
+    gtk_grid_attach(GTK_GRID(grid), space, 0, 35, 36, 1);
+
+    /* back btn to go back to main menu */
+    button = gtk_button_new_with_label("");
+    g_signal_connect_swapped(button, "clicked", G_CALLBACK(main_menu), NULL);
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Back</span>");
+    gtk_grid_attach(GTK_GRID(grid), button, 3, 46, 4, 1);
 }
 
 static void easy(GtkWidget *widget, gpointer data)
@@ -206,6 +282,7 @@ static void two_player_gamescreen(GtkWidget *widget, gpointer data)
 
     current_player = 1;
     starting_player = 1;
+
     /* Get player nammes from previous screen and set label names */
     player1_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player1))));
     player2_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player2))));
@@ -239,7 +316,6 @@ static void single_player(GtkWidget *widget, gpointer data)
 
     label = gtk_label_new("Choose your difficulty");
     gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Choose your difficulty</span>");
-    gtk_widget_set_size_request(label, 160, 20);
     gtk_grid_attach(GTK_GRID(grid), label, 14, 8, 8, 1);
 
     /* Difficulty buttons, each button links to different callback functions to change global variable 'difficulty' to change how computer plays */
@@ -270,10 +346,10 @@ void singleplayer_gamescreen()
 {
     current_player = 3;
     starting_player = 1;
-    left_label = gtk_label_new(""); // x
+    left_label = gtk_label_new(""); // player, x
     gtk_label_set_markup(GTK_LABEL(left_label), "<span size = 'large'>You</span>");
 
-    right_label = gtk_label_new("Computer"); // o
+    right_label = gtk_label_new("Computer"); // commputer, o
     gtk_label_set_markup(GTK_LABEL(right_label), "<span size = 'large'>Computer</span>");
 
     gamescreen();
@@ -289,7 +365,6 @@ void computer_move(int player_move)
     {
     /* Easy mode, randomm computer move */
     case 1:
-
         int choice, success = 0;
         do
         {
@@ -338,7 +413,6 @@ void computer_move(int player_move)
 
     /* Hard mode, minimax, not winnable*/
     case 3:
-
         for (i = 0; i < 9; i++)
         {
             if (square[i] != 'X' && square[i] != 'O') // if space is available
@@ -384,6 +458,7 @@ void gamescreen()
 
     x_label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>"); // player 1 start, bold x label
+
     o_label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
 
@@ -414,30 +489,30 @@ void gamescreen()
     gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(main_menu_btn)), "<span size = 'large'>Main Menu</span>");
     gtk_grid_attach(GTK_GRID(grid), main_menu_btn, 19, 4, 7, 1);
 
-    /* Align labels */
-
-    gtk_widget_set_size_request(left_label, 160, 20);
-    gtk_widget_set_size_request(right_label, 160, 20);
+    /* Align labels and attach to grid*/
 
     gtk_label_set_xalign(GTK_LABEL(x_label), 0.0);
     gtk_widget_set_valign(x_label, GTK_ALIGN_START);
+    gtk_grid_attach(GTK_GRID(grid), x_label, 4, 4, 3, 1);
+
     gtk_label_set_xalign(GTK_LABEL(o_label), 1.0);
     gtk_widget_set_valign(o_label, GTK_ALIGN_START);
-    gtk_grid_attach(GTK_GRID(grid), x_label, 4, 4, 3, 1);
     gtk_grid_attach(GTK_GRID(grid), o_label, 29, 4, 3, 1);
 
     gtk_label_set_xalign(GTK_LABEL(left_label), 0.0);
     gtk_widget_set_valign(left_label, GTK_ALIGN_END);
+    gtk_grid_attach(GTK_GRID(grid), left_label, 4, 3, 8, 1);
+
     gtk_label_set_xalign(GTK_LABEL(right_label), 1.0);
     gtk_widget_set_valign(right_label, GTK_ALIGN_END);
-    gtk_grid_attach(GTK_GRID(grid), left_label, 4, 3, 8, 1);
     gtk_grid_attach(GTK_GRID(grid), right_label, 24, 3, 8, 1);
 
     gtk_label_set_xalign(GTK_LABEL(left_score_label), 0.0);
     gtk_widget_set_valign(left_score_label, GTK_ALIGN_START);
+    gtk_grid_attach(GTK_GRID(grid), left_score_label, 4, 5, 3, 1);
+
     gtk_label_set_xalign(GTK_LABEL(right_score_label), 1.0);
     gtk_widget_set_valign(right_score_label, GTK_ALIGN_START);
-    gtk_grid_attach(GTK_GRID(grid), left_score_label, 4, 5, 3, 1);
     gtk_grid_attach(GTK_GRID(grid), right_score_label, 29, 5, 3, 1);
 
     /* nine buttons for tic tac toe game */
@@ -488,20 +563,25 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         if (current_player == 1) // player 1
         {
             square[index] = 'X';
+
+            // mark square btn
             gtk_label_set_markup(GTK_LABEL(gtk_widget_get_last_child(square_btn[index])), "<span size = 'xx-large'>X</span>");
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
-                if (*player1_name == '\0')
+                if (*player1_name == '\0') // if player name is empty, use default name
                     showdialog("We have a winner!", "Player 1 win");
                 else
                     showdialog("We have a winner!", g_strdup_printf("%s win", player1_name));
+
+                // update score and score label
                 player1_score++;
                 gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
                 end_game();
             }
             else
             {
+                // game cont, change to player 2
                 gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
                 gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
                 current_player++;
@@ -510,21 +590,26 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         else if (current_player == 2) // player 2
         {
             square[index] = 'O';
+
+            // mark square btn
             gtk_label_set_markup(GTK_LABEL(gtk_widget_get_last_child(square_btn[index])), "<span size = 'xx-large'>O</span>");
 
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
-                if (*player2_name == '\0')
+                if (*player2_name == '\0') // if player name is empty, use default name
                     showdialog("We have a winner!", "Player 2 win");
                 else
                     showdialog("We have a winner!", g_strdup_printf("%s win", player2_name));
+
+                // update score and score label
                 player2_score++;
                 gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
                 end_game();
             }
             else
             {
+                // game cont, change to player 1
                 gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
                 gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
                 current_player--;
@@ -534,11 +619,15 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         else if (current_player == 3)
         {
             square[index] = 'X';
+
+            // mark square btn
             gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(widget)), "<span size = 'xx-large'>X</span>");
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
             {
                 showdialog("We have a winner!", "You win");
+
+                // update score and label
                 player1_score++;
                 gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
                 end_game();
@@ -557,6 +646,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             if (k == 1)     // win
             {
                 showdialog("We have a winner!", "Computer win");
+
+                // update score and label
                 player2_score++;
                 gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
                 end_game();
@@ -650,24 +741,8 @@ static void restart(GtkWidget *widget, gpointer data)
     }
 }
 
-/* main menu, allow player to choose between single player and two player mode */
-static void main_menu(GtkWidget *widget, gpointer data)
+void main_btns()
 {
-    gtk_window_set_title(GTK_WINDOW(main_window), "Tic Tac Toe"); // change window title
-
-    clear_grid();
-
-    /* reinitialise square array */
-    for (int i = 0; i < 9; i++)
-    {
-        square[i] = i + '1';
-    }
-
-    player1_score = 0;
-    player2_score = 0;
-
-    mark = 'X'; // reinitialise player mark
-
     /* space on the left of screen */
     space = gtk_label_new("");
     gtk_widget_set_size_request(space, 280, 720);
@@ -700,12 +775,35 @@ static void main_menu(GtkWidget *widget, gpointer data)
     gtk_grid_attach(GTK_GRID(grid), button, 14, 16, 8, 1);
 }
 
+/* main menu, allow player to choose between single player and two player mode */
+static void main_menu(GtkWidget *widget, gpointer data)
+{
+    gtk_window_set_title(GTK_WINDOW(main_window), "Tic Tac Toe"); // change window title
+
+    clear_grid();
+
+    /* reinitialise square array */
+    for (int i = 0; i < 9; i++)
+    {
+        square[i] = i + '1';
+    }
+
+    player1_score = 0;
+    player2_score = 0;
+
+    mark = 'X'; // reinitialise player mark
+
+    main_btns();
+}
+
 /* First main menu screen when user open app */
 /* Initialise window and grid */
 static void setup(GtkApplication *app, gpointer user_data)
 {
 
     main_window = gtk_application_window_new(app);
+
+    // initialise values
     for (int i = 0; i < 9; i++)
     {
         square[i] = i + '1';
@@ -716,6 +814,7 @@ static void setup(GtkApplication *app, gpointer user_data)
     player1_score = 0;
     player2_score = 0;
 
+    // set window size and turn resizable off
     gtk_window_set_default_size(GTK_WINDOW(main_window), 720, 720);
     gtk_window_set_resizable(GTK_WINDOW(main_window), FALSE);
 
@@ -729,38 +828,10 @@ static void setup(GtkApplication *app, gpointer user_data)
     /* Pack the container in the window */
     gtk_window_set_child(GTK_WINDOW(main_window), grid);
 
+    // windows title
     gtk_window_set_title(GTK_WINDOW(main_window), "Tic Tac Toe");
 
-    /* space on the left of screen */
-    space = gtk_label_new("");
-    gtk_widget_set_size_request(space, 280, 720);
-    gtk_grid_attach(GTK_GRID(grid), space, 0, 0, 14, 36);
-
-    /* space on right of screen */
-    space = gtk_label_new("");
-    gtk_widget_set_size_request(space, 280, 720);
-    gtk_grid_attach(GTK_GRID(grid), space, 22, 0, 14, 36);
-
-    /* buttons */
-    button = gtk_button_new_with_label("");
-    g_signal_connect(button, "clicked", G_CALLBACK(single_player), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Single Player</span>");
-    gtk_grid_attach(GTK_GRID(grid), button, 14, 10, 8, 1);
-
-    button = gtk_button_new_with_label("");
-    g_signal_connect(button, "clicked", G_CALLBACK(two_player), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Two Player</span>");
-    gtk_grid_attach(GTK_GRID(grid), button, 14, 12, 8, 1);
-
-    button = gtk_button_new_with_label("");
-    g_signal_connect(button, "clicked", G_CALLBACK(test_data), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Test Data</span>");
-    gtk_grid_attach(GTK_GRID(grid), button, 14, 14, 8, 1);
-
-    button = gtk_button_new_with_label("");
-    g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_window_destroy), main_window);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Quit</span>");
-    gtk_grid_attach(GTK_GRID(grid), button, 14, 16, 8, 1);
+    main_btns();
 
     gtk_widget_show(main_window);
 }
