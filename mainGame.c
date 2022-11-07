@@ -55,25 +55,6 @@ static void test_data(GtkWidget *widget, gpointer data)
     float error = 0.0, accuracy = 0.0;
     double p_probability, n_probability, p_posterior, n_posterior;
 
-    label_struct structlist[] = {
-        {"<span size = 'x-large'>Algorithm Used: Naive Bayes</span>", 13, 1, 12, 2, 0.5, GTK_ALIGN_START},
-        {g_strdup_printf("<span size = 'large'>Total Data Sets Trained: %d</span>", TOTAL), 14, 4, 10, 1, 0.5, GTK_ALIGN_START},
-        {g_strdup_printf("<span size = 'large'>Total Data Sets Tested: %1.0f</span>", total_testing), 14, 5, 10, 1, 0.5, GTK_ALIGN_END},
-        {g_strdup_printf("<span foreground = 'green' size = 'large'>True Positive (TP): %d</span>", tp), 7, 7, 10, 1, 1.0, GTK_ALIGN_START},
-        {g_strdup_printf("<span foreground = 'red' size = 'large'>False Positive (FP): %d</span>", fp), 21, 7, 10, 1, 0.0, GTK_ALIGN_START},
-        {g_strdup_printf("<span foreground = 'red' size = 'large'>False Negative (FN): %d</span>", fn), 7, 9, 10, 1, 1.0, GTK_ALIGN_END},
-        {g_strdup_printf("<span foreground = 'green' size = 'large'>True Negative (TN): %d</span>", tn), 21, 9, 10, 1, 0.0, GTK_ALIGN_END},
-        {g_strdup_printf("<span size = 'large'>Total number of error: %1.0f</span>", error), 14, 12, 10, 1, 0.5, GTK_ALIGN_END},
-        {g_strdup_printf("<span size = 'large'>Accuracy: %0.1f%%</span>", accuracy), 15, 13, 10, 1, 0.5, GTK_ALIGN_END},
-        {"<span size = 'large'>Probabilities:</span>", 16, 15, 6, 1, 0.5, GTK_ALIGN_END},
-        {"<span size = 'large'>'x' positive: </span>", 4, 16, 6, 1, 1.0, GTK_ALIGN_END},
-        {"<span size = 'large'>'x' negative: </span>", 12, 16, 6, 1, 0.0, GTK_ALIGN_END},
-        {"<span size = 'large'>'o' positive: </span>", 20, 16, 6, 1, 1.0, GTK_ALIGN_END},
-        {"<span size = 'large'>'o' negative: </span>", 28, 16, 6, 1, 0.0, GTK_ALIGN_END},
-        {"<span size = 'large'>'b' positive: </span>", 12, 36, 6, 1, 0.0, GTK_ALIGN_END},
-        {"<span size = 'large'>'b' negative: </span>", 20, 36, 6, 1, 1.0, GTK_ALIGN_END},
-    };
-
     // test positive results
     for (int i = 0; i < positive_testing; i++)
     {
@@ -149,6 +130,28 @@ static void test_data(GtkWidget *widget, gpointer data)
     }
 
     accuracy = ((total_testing - error) / total_testing) * 100;
+
+    label_struct structlist[] = {
+        {"<span size = 'x-large'>Algorithm Used: Naive Bayes</span>", 13, 1, 12, 2, 0.5, GTK_ALIGN_START},
+        {g_strdup_printf("<span size = 'large'>Total Data Sets Trained: %d</span>", TOTAL), 14, 4, 10, 1, 0.5, GTK_ALIGN_START},
+        {g_strdup_printf("<span size = 'large'>Total Data Sets Tested: %1.0f</span>", total_testing), 14, 5, 10, 1, 0.5, GTK_ALIGN_END},
+        {g_strdup_printf("<span foreground = 'green' size = 'large'>True Positive (TP): %d</span>", tp), 7, 7, 10, 1, 1.0, GTK_ALIGN_START},
+        {g_strdup_printf("<span foreground = 'red' size = 'large'>False Positive (FP): %d</span>", fp), 21, 7, 10, 1, 0.0, GTK_ALIGN_START},
+        {g_strdup_printf("<span foreground = 'red' size = 'large'>False Negative (FN): %d</span>", fn), 7, 9, 10, 1, 1.0, GTK_ALIGN_END},
+        {g_strdup_printf("<span foreground = 'green' size = 'large'>True Negative (TN): %d</span>", tn), 21, 9, 10, 1, 0.0, GTK_ALIGN_END},
+        {g_strdup_printf("<span size = 'large'>Total number of error: %1.0f</span>", error), 14, 12, 10, 1, 0.5, GTK_ALIGN_END},
+        {g_strdup_printf("<span size = 'large'>Accuracy: %0.1f%%</span>", accuracy), 16, 13, 8, 1, 0.5, GTK_ALIGN_END},
+        /*
+        {"<span size = 'large'>Probabilities:</span>", 16, 15, 6, 1, 0.5, GTK_ALIGN_END},
+        {"<span size = 'large'>'x' positive: </span>", 4, 16, 6, 1, 1.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'x' negative: </span>", 12, 16, 6, 1, 0.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'o' positive: </span>", 20, 16, 6, 1, 1.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'o' negative: </span>", 28, 16, 6, 1, 0.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'b' positive: </span>", 12, 36, 6, 1, 0.0, GTK_ALIGN_END},
+        {"<span size = 'large'>'b' negative: </span>", 20, 36, 6, 1, 1.0, GTK_ALIGN_END},
+        */
+    };
+
     gtk_window_set_title(GTK_WINDOW(main_window), "Test Data");
 
     /*clear previous widgets*/
@@ -157,7 +160,7 @@ static void test_data(GtkWidget *widget, gpointer data)
     space = gtk_label_new(""); // space on top of window
     gtk_grid_attach(GTK_GRID(grid), space, 0, 0, 36, 1);
 
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 9; i++)
     {
         label = gtk_label_new("");
         gtk_label_set_markup(GTK_LABEL(label), structlist[i].label_str);
@@ -166,7 +169,8 @@ static void test_data(GtkWidget *widget, gpointer data)
         gtk_widget_set_valign(label, structlist[i].valign_val);
     }
 
-    /* labels for data */
+    /* labels for data, not sure if needed */
+    /*
     for (int i = 0; i < 9; i++)
     {
         label = gtk_label_new("");
@@ -205,15 +209,16 @@ static void test_data(GtkWidget *widget, gpointer data)
         gtk_label_set_xalign(GTK_LABEL(label), 1.0);
         gtk_widget_set_valign(label, GTK_ALIGN_END);
     }
+    */
 
     space = gtk_label_new("");
-    gtk_grid_attach(GTK_GRID(grid), space, 0, 35, 36, 1);
+    gtk_grid_attach(GTK_GRID(grid), space, 0, 14, 36, 2);
 
     /* back btn to go back to main menu */
     button = gtk_button_new_with_label("");
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(main_menu), NULL);
     gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Back</span>");
-    gtk_grid_attach(GTK_GRID(grid), button, 3, 46, 4, 1);
+    gtk_grid_attach(GTK_GRID(grid), button, 14, 16, 8, 1);
 }
 
 static void easy(GtkWidget *widget, gpointer data)
@@ -431,9 +436,9 @@ void computer_move(int player_move)
     default:
         break;
     }
-    square[best_move] = com_mark;                                                                                           // update square array
-    GtkWidget *image = gtk_image_new_from_file ("O.png");
-    gtk_button_set_child (GTK_BUTTON (square_btn[best_move]), image); // change button label to computer mark
+    square[best_move] = com_mark; // update square array
+    GtkWidget *image = gtk_image_new_from_file("O.png");
+    gtk_button_set_child(GTK_BUTTON(square_btn[best_move]), image); // change button label to computer mark
 }
 
 /* When game ends, set all square buttons to inactive, set play again button to be active*/
@@ -566,8 +571,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'X';
 
             // mark square btn
-            GtkWidget *image = gtk_image_new_from_file ("X.png");
-            gtk_button_set_child (GTK_BUTTON (widget), image);
+            GtkWidget *image = gtk_image_new_from_file("X.png");
+            gtk_button_set_child(GTK_BUTTON(widget), image);
 
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
@@ -595,8 +600,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'O';
 
             // mark square btn
-            GtkWidget *image = gtk_image_new_from_file ("O.png");
-            gtk_button_set_child (GTK_BUTTON (widget), image);
+            GtkWidget *image = gtk_image_new_from_file("O.png");
+            gtk_button_set_child(GTK_BUTTON(widget), image);
 
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
@@ -625,8 +630,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'X';
 
             // mark square btn
-            GtkWidget *image = gtk_image_new_from_file ("X.png");
-            gtk_button_set_child (GTK_BUTTON (widget), image);
+            GtkWidget *image = gtk_image_new_from_file("X.png");
+            gtk_button_set_child(GTK_BUTTON(widget), image);
 
             k = checkwin(); // check if game has ended
             if (k == 1)     // game ended, win
