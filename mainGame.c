@@ -293,10 +293,10 @@ static void two_player_gamescreen(GtkWidget *widget, gpointer data)
     player2_name = g_strdup(gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(player2))));
 
     left_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(left_label), g_strdup_printf("<span size = 'large'>%s</span>", player1_name));
+    gtk_label_set_markup(GTK_LABEL(left_label), g_strdup_printf("<span size = 'x-large'>%s</span>", player1_name));
 
     right_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(right_label), g_strdup_printf("<span size = 'large'>%s</span>", player2_name));
+    gtk_label_set_markup(GTK_LABEL(right_label), g_strdup_printf("<span size = 'x-large'>%s</span>", player2_name));
 
     gamescreen(); // standard gamescreen
 }
@@ -352,10 +352,10 @@ void singleplayer_gamescreen()
     current_player = 3;
     starting_player = 1;
     left_label = gtk_label_new(""); // player, x
-    gtk_label_set_markup(GTK_LABEL(left_label), "<span size = 'large'>You</span>");
+    gtk_label_set_markup(GTK_LABEL(left_label), "<span size = 'x-large'>You</span>");
 
     right_label = gtk_label_new("Computer"); // commputer, o
-    gtk_label_set_markup(GTK_LABEL(right_label), "<span size = 'large'>Computer</span>");
+    gtk_label_set_markup(GTK_LABEL(right_label), "<span size = 'x-large'>Computer</span>");
 
     gamescreen();
 }
@@ -463,16 +463,29 @@ void gamescreen()
     clear_grid();
 
     x_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>"); // player 1 start, bold x label
+    gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'x-large'>(X)</span></b>"); // player 1 start, bold x label
 
     o_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
+    gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'x-large'>(O)</span>");
 
     right_score_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
+    gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'x-large'>Score - %d</span>", player1_score));
 
     left_score_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
+    gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'x-large'>Score - %d</span>", player2_score));
+
+    label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(label), "<span size = 'x-large'><u>Player 1</u></span>");
+    gtk_label_set_xalign(GTK_LABEL(label), 0.0);
+    gtk_widget_set_valign(label, GTK_ALIGN_END);
+    gtk_grid_attach(GTK_GRID(grid), label, 4, 2, 5, 1);
+
+    label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(label), "<span size = 'x-large'><u>Player 2</u></span>");
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_widget_set_valign(label, GTK_ALIGN_END);
+    gtk_grid_attach(GTK_GRID(grid), label, 27, 2, 5, 1);
+
     /* space on the left */
     space = gtk_label_new("");
 
@@ -506,20 +519,20 @@ void gamescreen()
     gtk_grid_attach(GTK_GRID(grid), o_label, 29, 4, 3, 1);
 
     gtk_label_set_xalign(GTK_LABEL(left_label), 0.0);
-    gtk_widget_set_valign(left_label, GTK_ALIGN_END);
-    gtk_grid_attach(GTK_GRID(grid), left_label, 4, 3, 8, 1);
+    gtk_widget_set_valign(left_label, GTK_ALIGN_START);
+    gtk_grid_attach(GTK_GRID(grid), left_label, 4, 3, 14, 1);
 
     gtk_label_set_xalign(GTK_LABEL(right_label), 1.0);
-    gtk_widget_set_valign(right_label, GTK_ALIGN_END);
-    gtk_grid_attach(GTK_GRID(grid), right_label, 24, 3, 8, 1);
+    gtk_widget_set_valign(right_label, GTK_ALIGN_START);
+    gtk_grid_attach(GTK_GRID(grid), right_label, 18, 3, 14, 1);
 
     gtk_label_set_xalign(GTK_LABEL(left_score_label), 0.0);
     gtk_widget_set_valign(left_score_label, GTK_ALIGN_START);
-    gtk_grid_attach(GTK_GRID(grid), left_score_label, 4, 5, 3, 1);
+    gtk_grid_attach(GTK_GRID(grid), left_score_label, 4, 5, 4, 1);
 
     gtk_label_set_xalign(GTK_LABEL(right_score_label), 1.0);
     gtk_widget_set_valign(right_score_label, GTK_ALIGN_START);
-    gtk_grid_attach(GTK_GRID(grid), right_score_label, 29, 5, 3, 1);
+    gtk_grid_attach(GTK_GRID(grid), right_score_label, 28, 5, 4, 1);
 
     /* nine buttons for tic tac toe game */
     for (i = 0; i < 9; i++)
@@ -584,14 +597,14 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 
                 // update score and score label
                 player1_score++;
-                gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
+                gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'x-large'>Score - %d</span>", player1_score));
                 end_game();
             }
             else
             {
                 // game cont, change to player 2
-                gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
-                gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
+                gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'x-large'>(X)</span>");
+                gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'x-large'>(O)</span></b>");
                 current_player++;
             }
         }
@@ -613,14 +626,14 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 
                 // update score and score label
                 player2_score++;
-                gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
+                gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'x-large'>Score - %d</span>", player2_score));
                 end_game();
             }
             else
             {
                 // game cont, change to player 1
-                gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
-                gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
+                gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'x-large'>(X)</span></b>");
+                gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'x-large'>(O)</span>");
                 current_player--;
             }
         }
@@ -640,7 +653,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 
                 // update score and label
                 player1_score++;
-                gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player1_score));
+                gtk_label_set_markup(GTK_LABEL(left_score_label), g_strdup_printf("<span size = 'x-large'>Score - %d</span>", player1_score));
                 end_game();
             }
         }
@@ -660,7 +673,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 
                 // update score and label
                 player2_score++;
-                gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'large'>Score - %d</span>", player2_score));
+                gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'x-large'>Score - %d</span>", player2_score));
                 end_game();
             }
             else if (k == 2) // draw
@@ -703,15 +716,15 @@ static void replay(GtkWidget *widget, gpointer data)
         else
         {
             current_player = 2;
-            gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
-            gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
+            gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'x-large'>(X)</span>");
+            gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'x-large'>(O)</span></b>");
         }
     }
     else
     {
         starting_player--;
-        gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
-        gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
+        gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'x-large'>(X)</span></b>");
+        gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'x-large'>(O)</span>");
         if (current_player != 3)
             current_player = 1;
     }
@@ -731,8 +744,8 @@ static void restart(GtkWidget *widget, gpointer data)
     /* if starting player is 1, player 1 start again*/
     if (starting_player == 1)
     {
-        gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'large'>(X)</span></b>");
-        gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'large'>(O)</span>");
+        gtk_label_set_markup(GTK_LABEL(x_label), "<b><span size = 'x-large'>(X)</span></b>");
+        gtk_label_set_markup(GTK_LABEL(o_label), "<span size = 'x-large'>(O)</span>");
         /* if two player mode, current player set to player 1*/
         if (current_player != 3)
             current_player = 1;
@@ -745,8 +758,8 @@ static void restart(GtkWidget *widget, gpointer data)
         else
         /* if two player mode and starting player is 2, set current player to 2*/
         {
-            gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'large'>(X)</span>");
-            gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'large'>(O)</span></b>");
+            gtk_label_set_markup(GTK_LABEL(x_label), "<span size = 'x-large'>(X)</span>");
+            gtk_label_set_markup(GTK_LABEL(o_label), "<b><span size = 'x-large'>(O)</span></b>");
             current_player = 2;
         }
     }
