@@ -5,5 +5,6 @@ extern char square[9];      // game state, reinitialised after every game has en
 extern int starting_player; // starting player for the game, either 1 or 2, change after every round
 extern int player1_score;   // score tracker for player 1
 extern int player2_score;   // score tracker for player 2
+extern int tie_score;       // score tracker for tie
 
 int checkwin();

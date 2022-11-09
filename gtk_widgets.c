@@ -18,6 +18,8 @@ GtkWidget *o_label;
 GtkWidget *square_btn[9];
 GtkWidget *left_score_label;
 GtkWidget *right_score_label;
+GtkWidget *tie_label;
+GtkWidget *tie_score_label;
 
 const char *player1_name;
 const char *player2_name;
@@ -48,8 +50,8 @@ void showdialog(const char *title, const char *message)
 
     gtk_widget_set_size_request(dialog, 250, 30);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    label = gtk_label_new(message); // message is showed as label
-
+    label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(label), g_strdup_printf("<span size = 'large'>%s</span>", message)); // message is showed as label
     // Ensure that the dialog box is destroyed when the user responds
 
     g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_window_destroy), dialog);

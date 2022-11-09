@@ -7,6 +7,7 @@ char square[9];      // game state, reinitialised after every game has ended / u
 int starting_player; // starting player for the game, either 1 or 2, change after every round
 int player1_score;   // score tracker for player 1
 int player2_score;   // score tracker for player 2
+int tie_score;       // score tracker for tie
 
 /* return 0 to continue game, 1 for win, 2 for draw */
 int checkwin()
