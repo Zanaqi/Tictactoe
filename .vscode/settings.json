@@ -5,6 +5,11 @@
         "source_location": "c",
         "stdlib.h": "c",
         "gtk.h": "c",
-        "ostream": "c"
+        "ostream": "c",
+        "random": "c",
+        "stdio.h": "c",
+        "minimax.h": "c",
+        "gtk_widgets.h": "c",
+        "ttt.h": "c"
     }
 }

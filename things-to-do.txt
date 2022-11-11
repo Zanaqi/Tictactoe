@@ -1,5 +1,2 @@
-- pls check test data, not sure if thats what lawrence wants
-
-- change color button at end of game to show winning line
-
-- improve on gui, not perfect yet (ALMOST THERE)
+- update main-backgnd img
+- optimisation

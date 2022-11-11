@@ -1,2 +1,1 @@
-
-int minimax(int maximise, char com_mark);
+int minimax(int maximise, int depth);

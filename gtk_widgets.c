@@ -4,6 +4,8 @@
 
 GtkWidget *main_window;
 GtkWidget *grid;
+GtkWidget *layout;
+GtkWidget *backgnd;
 GtkWidget *button;
 GtkWidget *space;
 GtkWidget *label;
@@ -24,14 +26,14 @@ GtkWidget *tie_score_label;
 const char *player1_name;
 const char *player2_name;
 
-void clear_grid()
+void clear_layout()
 {
     GtkWidget *childs;
-    childs = gtk_widget_get_first_child(grid);
+    childs = gtk_widget_get_first_child(layout);
     while (childs != NULL)
     {
-        gtk_grid_remove(GTK_GRID(grid), childs);
-        childs = gtk_widget_get_first_child(grid);
+        gtk_fixed_remove(GTK_FIXED(layout), childs);
+        childs = gtk_widget_get_first_child(layout);
     }
 }
 
@@ -61,4 +63,18 @@ void showdialog(const char *title, const char *message)
     gtk_box_append(GTK_BOX(content_area), label);
 
     gtk_widget_show(dialog);
+}
+
+void placeLabel(GtkWidget *widget, int x, int y, int width, int height, float xalign, GtkAlign valign)
+{
+    gtk_label_set_xalign(GTK_LABEL(widget), xalign);
+    gtk_widget_set_valign(widget, GTK_ALIGN_CENTER);
+    gtk_fixed_put(GTK_FIXED(layout), widget, x, y);
+    gtk_widget_set_size_request(widget, width, height);
+}
+
+void placeWidget(GtkWidget *widget, int x, int y, int width, int height)
+{
+    gtk_fixed_put(GTK_FIXED(layout), widget, x, y);
+    gtk_widget_set_size_request(widget, width, height);
 }

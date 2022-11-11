@@ -1,14 +1,80 @@
 #include "ttt.h"
 
-char mark;           // player mark
-int difficulty;      // 1 - easy, 2 - medium, 3 - hard
+int difficulty = 0;  // 1 - easy, 2 - medium, 3 - hard
 int current_player;  // 1 and 2 for two player, 3 for single player
 char square[9];      // game state, reinitialised after every game has ended / user quit
 int starting_player; // starting player for the game, either 1 or 2, change after every round
 int player1_score;   // score tracker for player 1
 int player2_score;   // score tracker for player 2
 int tie_score;       // score tracker for tie
+int winning_row[3];
 
+void checkrow()
+{
+    // horizontal
+    if (square[0] == square[1] && square[1] == square[2])
+    {
+        winning_row[0] = 0;
+        winning_row[1] = 1;
+        winning_row[2] = 2;
+    }
+
+    // horizontal
+    else if (square[3] == square[4] && square[4] == square[5])
+    {
+        winning_row[0] = 3;
+        winning_row[1] = 4;
+        winning_row[2] = 5;
+    }
+
+    // horizontal
+    else if (square[6] == square[7] && square[7] == square[8])
+    {
+        winning_row[0] = 6;
+        winning_row[1] = 7;
+        winning_row[2] = 8;
+    }
+
+    // vertical
+    else if (square[0] == square[3] && square[3] == square[6])
+    {
+        winning_row[0] = 0;
+        winning_row[1] = 3;
+        winning_row[2] = 6;
+    }
+
+    // vertical
+    else if (square[1] == square[4] && square[4] == square[7])
+    {
+        winning_row[0] = 1;
+        winning_row[1] = 4;
+        winning_row[2] = 7;
+    }
+
+    // vertical
+    else if (square[2] == square[5] && square[5] == square[8])
+    {
+        winning_row[0] = 2;
+        winning_row[1] = 5;
+        winning_row[2] = 8;
+    }
+
+    // diagonal top left to bottom right
+    else if (square[0] == square[4] && square[4] == square[8])
+    {
+        winning_row[0] = 0;
+        winning_row[1] = 4;
+        winning_row[2] = 8;
+    }
+
+    // diagonal top right to bottom left
+    else if (square[2] == square[4] && square[4] == square[6])
+    {
+        winning_row[0] = 2;
+        winning_row[1] = 4;
+        winning_row[2] = 6;
+    }
+}
 /* return 0 to continue game, 1 for win, 2 for draw */
 int checkwin()
 {
