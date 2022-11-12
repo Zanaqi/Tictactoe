@@ -369,8 +369,8 @@ void computer_move(int player_move)
 /* To draw grid lines */
 static void draw_function(GtkDrawingArea *area, cairo_t *cr, int width, int height, gpointer data)
 {
-    cairo_set_source_rgb(cr, 0.411764705882353, 0.411764705882353, 0.411764705882353); // Line colour
-    cairo_set_line_width(cr, 12);                                                      // Line width
+    cairo_set_source_rgb(cr, 0, 0, 0); // Line colour
+    cairo_set_line_width(cr, 4);       // Line width
 
     cairo_move_to(cr, 170, 0);
     cairo_line_to(cr, 170, 520);
@@ -384,7 +384,7 @@ static void draw_function(GtkDrawingArea *area, cairo_t *cr, int width, int heig
     cairo_move_to(cr, 0, 350);
     cairo_line_to(cr, 520, 350);
 
-    cairo_stroke(cr);
+    cairo_stroke(cr); // draw the lines
 }
 
 /* Common gamescreen to be used by both single player and two player mode */
@@ -399,14 +399,13 @@ void gamescreen()
     gtk_widget_set_size_request(backgnd, 720, 720);
     gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
 
-    /* check if need, uncomment to see grid lines
+    /* draw grid lines */
     GtkWidget *area = gtk_drawing_area_new();
     gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(area), 520);
     gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(area), 520);
     gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(area), draw_function, NULL, NULL);
 
     gtk_fixed_put(GTK_FIXED(layout), area, 100, 160);
-    */
 
     x_label = gtk_label_new("");
     o_label = gtk_label_new("");
