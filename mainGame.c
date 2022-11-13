@@ -158,13 +158,13 @@ static void two_player(GtkWidget *widget, gpointer data)
     /* Start button */
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player_gamescreen), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Start</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'green'><b>Start</b></span>");
     placeWidget(button, 280, 370, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     /* Back button to go back to main menu */
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Back</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'><b>Back</b></span>");
     placeWidget(button, 50, 630, 100, 40);
 }
 
@@ -229,23 +229,23 @@ static void single_player(GtkWidget *widget, gpointer data)
     /* Difficulty buttons, each button links to different callback functions to change global variable 'difficulty' to change how computer plays*/
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(singleplayer_gamescreen), easy_ptr);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Easy</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'green'><b>Easy</b></span>");
     placeWidget(button, 280, 250, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(singleplayer_gamescreen), med_ptr);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Medium</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'orange'><b>Medium</b></span>");
     placeWidget(button, 280, 310, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(singleplayer_gamescreen), hard_ptr);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Hard</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'red'><b>Hard</b></span>");
     placeWidget(button, 280, 370, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     /* Back button to go back to main menu*/
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Back</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'><b>Back</b></span>");
     placeWidget(button, 50, 630, 100, 40);
 }
 
@@ -856,17 +856,17 @@ void main_layout()
     /* buttons */
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(single_player), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Single Player</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'green'><b>Single Player</b></span>");
     placeWidget(button, 280, 200, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Two Player</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'orange'><b>Two Player</b></span>");
     placeWidget(button, 280, 270, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_window_destroy), main_window);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Quit</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'red'><b>Quit</b></span>");
     placeWidget(button, 280, 340, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     // initialise values

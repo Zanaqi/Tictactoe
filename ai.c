@@ -19,8 +19,10 @@ double conditional_b[18];
 /* FILE pointer to retrieve data from .data file, then sort array */
 void get_data()
 {
+
     printf("Tic Tac Toe\n\n");
     printf("Getting data from dataset...\n");
+
     FILE *fPointer;
     total_negative = 0.0;
     total_positive = 0.0;
@@ -29,18 +31,11 @@ void get_data()
         printf("Error: data file could not be opened\n");
         exit(1);
     }
+
     char raw_dataset[TOTAL][28]; // raw temporary data
 
-    int i = 0;
+    int i = 0, k = 0, j = 0;
     while (fgets(raw_dataset[i], 28, fPointer) != NULL) // each line in dataset contains 28 characters
-    {
-        i++;
-    }
-    fclose(fPointer); // close the file
-
-    i = 0;
-    int j, k = 0;
-    do
     {
         k = 0;
         for (j = 0; j < 19; j += 2)
@@ -48,18 +43,13 @@ void get_data()
             dataset[i][k] = raw_dataset[i][j]; // remove commas and '\n'
             k++;
         }
-        i++;
-    } while (i < TOTAL);
-
-    i = 0;
-    do
-    {
         if (dataset[i][9] == 'n')
             total_negative++;
         else
             total_positive++;
         i++;
-    } while (i < TOTAL);
+    }
+    fclose(fPointer); // close the file
 
     printf("Training data using Naive Bayes Algorithm...\n");
     train_dataset();
