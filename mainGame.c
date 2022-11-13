@@ -302,7 +302,7 @@ void gamescreen()
     gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(area), 520);
     gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(area), 520);
     gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(area), draw_function, NULL, NULL);
-
+    gtk_widget_set_opacity(area, 0.7);
     gtk_fixed_put(GTK_FIXED(layout), area, 100, 160);
 
     x_label = gtk_label_new("");
@@ -360,7 +360,7 @@ void gamescreen()
     {
         square_btn[i] = gtk_button_new();
         gtk_widget_set_sensitive(square_btn[i], TRUE);
-
+        gtk_widget_set_opacity(square_btn[i], 0.85);
         g_signal_connect(square_btn[i], "clicked", G_CALLBACK(square_clicked), NULL);
 
         placeWidget(square_btn[i], x, y, 160, 160);
@@ -597,7 +597,10 @@ void end_game(int result)
     gtk_label_set_markup(GTK_LABEL(right_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", player2_score));
 
     for (int i = 0; i < 9; i++)
+    {
+        gtk_widget_set_opacity(square_btn[i], 0.7);
         gtk_widget_set_sensitive(square_btn[i], FALSE);
+    }
 
     g_signal_connect(replay_btn, "clicked", G_CALLBACK(replay), NULL);
     g_signal_handlers_disconnect_by_func(replay_btn, restart, NULL);
@@ -611,6 +614,7 @@ static void replay(GtkWidget *widget, gpointer data)
     /* Reinitialise square array */
     for (int i = 0; i < 9; i++)
     {
+        gtk_widget_set_opacity(square_btn[i], 0.85);
         gtk_widget_set_sensitive(square_btn[i], TRUE);
         if (square[i] == 'X' || square[i] == 'O')
         {
