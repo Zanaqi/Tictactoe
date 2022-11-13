@@ -18,3 +18,4 @@ void get_data();
 void train_dataset();
 void conditional_probability(char mark, int spot);
 double calc_probability(char input_mark, int move, int store);
+void test_data();

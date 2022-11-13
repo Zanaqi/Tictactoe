@@ -55,6 +55,110 @@ void get_data()
     train_dataset();
 
     printf("Data initialisation complete\n");
+
+    test_data();
+}
+
+void test_data()
+{
+    double positive_prior = total_positive / 958.0;
+    double negative_prior = total_negative / 958.0;
+
+    int positive_testing = total_positive * 0.2; // number of test positive
+    int negative_testing = total_negative * 0.2; // number of test negative
+    int confusion_matrix[4] = {0, 0, 0, 0};      // tp, fn, fp, tn
+    int k = 0;                                   // values for confusion matrix
+
+    int positive = total_positive * 0.8;
+    float total_testing = positive_testing + negative_testing;
+    float error = 0.0, accuracy = 0.0;
+    double p_probability, n_probability, p_posterior, n_posterior;
+
+    // test positive results
+    for (int i = 0; i < positive_testing; i++)
+    {
+        p_probability = positive_prior;
+        n_probability = negative_prior;
+
+        /*for each element in dataset, get posterior probability and multiply with the prior probability*/
+
+        for (k = 0; k < 9; k++)
+        {
+            if (dataset[i + positive][k] == 'x')
+            {
+                p_probability = p_probability * conditional_x[k + 9];
+                n_probability = n_probability * conditional_x[k];
+            }
+
+            else if (dataset[i + positive][k] == 'o')
+            {
+                p_probability = p_probability * conditional_o[k + 9];
+                n_probability = n_probability * conditional_o[k];
+            }
+            else if (dataset[i + positive][k] == 'b')
+            {
+                p_probability = p_probability * conditional_b[k + 9];
+                n_probability = n_probability * conditional_b[k];
+            }
+        }
+
+        if (p_probability > n_probability) // True positive
+            confusion_matrix[0]++;
+
+        else
+        {
+            error++;               // increase count of error output
+            confusion_matrix[1]++; // False Negative
+        }
+    }
+
+    // test negative results
+    for (int i = TOTAL - 1; i > TOTAL - negative_testing; i--)
+    {
+        p_probability = positive_prior;
+        n_probability = negative_prior;
+
+        /*for each element in dataset, get posterior probability and multiply with the prior probability*/
+
+        for (k = 0; k < 9; k++)
+        {
+            if (dataset[i][k] == 'x')
+            {
+                p_probability = p_probability * conditional_x[k + 9];
+                n_probability = n_probability * conditional_x[k];
+            }
+
+            else if (dataset[i][k] == 'o')
+            {
+                p_probability = p_probability * conditional_o[k + 9];
+                n_probability = n_probability * conditional_o[k];
+            }
+            else if (dataset[i][k] == 'b')
+            {
+                p_probability = p_probability * conditional_b[k + 9];
+                n_probability = n_probability * conditional_b[k];
+            }
+        }
+
+        if (p_probability > n_probability)
+        {
+            error++;               // increase count of error
+            confusion_matrix[2]++; // False Positive
+        }
+
+        else
+            confusion_matrix[3]++; // True Negative
+    }
+
+    accuracy = ((total_testing - error) / total_testing) * 100;
+    printf("\nTesting data with 20%% of data set\n\n");
+    printf("Total tested                    %1.0f\n", total_testing);
+    printf("True Positive (TP)              %d\n", confusion_matrix[0]);
+    printf("False Negative (FN)             %d\n", confusion_matrix[1]);
+    printf("False Positive (FP)             %d\n", confusion_matrix[2]);
+    printf("True Negative (TN)              %d\n", confusion_matrix[3]);
+    printf("Number of errors                %1.0f\n", error);
+    printf("Accuracy                        %0.2f%%\n", accuracy);
 }
 
 /* train data for all three occurances (x, o, b) */
