@@ -74,6 +74,7 @@ void test_data()
     float error = 0.0, accuracy = 0.0;
     double p_probability, n_probability, p_posterior, n_posterior;
 
+    printf("\nTesting data with 20%% of data set\n\n");
     // test positive results
     for (int i = 0; i < positive_testing; i++)
     {
@@ -151,7 +152,6 @@ void test_data()
     }
 
     accuracy = ((total_testing - error) / total_testing) * 100;
-    printf("\nTesting data with 20%% of data set\n\n");
     printf("Total tested                    %1.0f\n", total_testing);
     printf("True Positive (TP)              %d\n", confusion_matrix[0]);
     printf("False Negative (FN)             %d\n", confusion_matrix[1]);

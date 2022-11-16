@@ -4,30 +4,36 @@
 #define BUTTON_HEIGHT 50
 
 extern GtkWidget *main_window;
-extern GtkWidget *grid;
 extern GtkWidget *layout;
-extern GtkWidget *backgnd;
-extern GtkWidget *button;
-extern GtkWidget *space;
-extern GtkWidget *label;
-extern GtkWidget *player1;
-extern GtkWidget *player2;
-extern GtkWidget *replay_btn;
-extern GtkWidget *main_menu_btn;
-extern GtkWidget *left_label;
-extern GtkWidget *right_label;
-extern GtkWidget *x_label;
-extern GtkWidget *o_label;
-extern GtkWidget *square_btn[9];
-extern GtkWidget *left_score_label;
-extern GtkWidget *right_score_label;
-extern GtkWidget *tie_label;
-extern GtkWidget *tie_score_label;
 
-extern const char *player1_name;
-extern const char *player2_name;
+struct Gamedata
+{
+    GtkWidget *player1_entry;
+    GtkWidget *player2_entry;
+    GtkWidget *replay_btn;
+    GtkWidget *square_btn[9];
+    GtkWidget *left_label;
+    GtkWidget *right_label;
+    GtkWidget *x_label;
+    GtkWidget *o_label;
+    GtkWidget *left_score_label;
+    GtkWidget *right_score_label;
+    GtkWidget *tie_label;
+    GtkWidget *tie_score_label;
+
+    const char *player1_name;
+    const char *player2_name;
+    int player1_score; // score tracker for player 1
+    int player2_score; // score tracker for player 2
+    int tie_score;     // score tracker for tie
+
+    int current_player;  // 1 and 2 for two player, 3 for single player
+    int starting_player; // starting player for the game, either 1 or 2, change after every round
+    int difficulty;
+    int gamestate; // checkwin value
+};
 
 void clear_layout();
 void showdialog(const char *title, const char *message);
-void placeLabel(GtkWidget *widget, int x, int y, int width, int height, float xalign, GtkAlign valign);
 void placeWidget(GtkWidget *widget, int x, int y, int width, int height);
+void labels_state(int state, struct Gamedata *gamedata);

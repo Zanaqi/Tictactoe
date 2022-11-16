@@ -3,28 +3,7 @@
 #include "ttt.h"
 
 GtkWidget *main_window;
-GtkWidget *grid;
 GtkWidget *layout;
-GtkWidget *backgnd;
-GtkWidget *button;
-GtkWidget *space;
-GtkWidget *label;
-GtkWidget *player1;
-GtkWidget *player2;
-GtkWidget *replay_btn;
-GtkWidget *main_menu_btn;
-GtkWidget *left_label;
-GtkWidget *right_label;
-GtkWidget *x_label;
-GtkWidget *o_label;
-GtkWidget *square_btn[9];
-GtkWidget *left_score_label;
-GtkWidget *right_score_label;
-GtkWidget *tie_label;
-GtkWidget *tie_score_label;
-
-const char *player1_name;
-const char *player2_name;
 
 void clear_layout()
 {
@@ -65,16 +44,60 @@ void showdialog(const char *title, const char *message)
     gtk_widget_show(dialog);
 }
 
-void placeLabel(GtkWidget *widget, int x, int y, int width, int height, float xalign, GtkAlign valign)
-{
-    gtk_label_set_xalign(GTK_LABEL(widget), xalign);
-    gtk_widget_set_valign(widget, GTK_ALIGN_CENTER);
-    gtk_fixed_put(GTK_FIXED(layout), widget, x, y);
-    gtk_widget_set_size_request(widget, width, height);
-}
-
 void placeWidget(GtkWidget *widget, int x, int y, int width, int height)
 {
     gtk_fixed_put(GTK_FIXED(layout), widget, x, y);
     gtk_widget_set_size_request(widget, width, height);
+}
+
+void labels_state(int state, struct Gamedata *gamedata)
+{
+
+    if (state == 1) //  bold player 1, grey player 2
+    {
+        // bold player 1
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large'><b>%s</b></span>", gamedata->player1_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large'><b><u>Player 1 (X)</u></b></span>");
+
+        // grey player 2
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player2_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large' foreground = 'grey'><u>Player 2 (O)</u></span>");
+    }
+    else if (state == 2) // grey player 1, bold player 2
+    {
+        // grey player 1
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player1_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large' foreground = 'grey'><u>Player 1 (X)</u></span>");
+
+        // bold player 2
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large'><b>%s</b></span>", gamedata->player2_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large'><b><u>Player 2 (O)</u></b></span>");
+    }
+    else if (state == 3) // player 1 and player 2 no markup
+    {
+        // player 1
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large'>%s</span>", gamedata->player1_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large'><u>Player 1 (X)</u></span>");
+
+        // player 2
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large'>%s</span>", gamedata->player2_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large'><u>Player 2 (O)</u></span>");
+    }
+    else if (state == 4) // grey player 1 and grey player 2
+    {
+        // grey player 1
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player1_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large' foreground = 'grey'><u>Player 1 (X)</u></span>");
+
+        // grey player 2
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player2_name));
+        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large' foreground = 'grey'><u>Player 2 (O)</u></span>");
+    }
+    else if (state == 5) // grey score labels
+    {
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->player1_score));
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_score_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->player2_score));
+        gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->tie_score));
+        gtk_label_set_markup(GTK_LABEL(gamedata->tie_label), "<span size = 'x-large' foreground = 'grey'>Tie</span>");
+    }
 }

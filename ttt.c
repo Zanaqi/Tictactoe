@@ -1,12 +1,6 @@
 #include "ttt.h"
 
-int difficulty = 0;  // 1 - easy, 2 - medium, 3 - hard
-int current_player;  // 1 and 2 for two player, 3 for single player
-char square[9];      // game state, reinitialised after every game has ended / user quit
-int starting_player; // starting player for the game, either 1 or 2, change after every round
-int player1_score;   // score tracker for player 1
-int player2_score;   // score tracker for player 2
-int tie_score;       // score tracker for tie
+char square[9]; // squares state, reinitialised after every game has ended / user quit
 int winning_row[3];
 
 void checkrow()
