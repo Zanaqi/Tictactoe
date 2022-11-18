@@ -642,13 +642,9 @@ static void replay(GtkWidget *widget, gpointer data)
 
 void main_layout()
 {
-    GtkWidget *backgnd, *button;
+    GtkWidget *button;
 
-    /*backgnd image*/
-    backgnd = gtk_image_new_from_file("resources/main-backgnd.png");
-    gtk_widget_set_size_request(backgnd, 720, 720);
-    gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
-    
+
     // window title
     gtk_window_set_title(GTK_WINDOW(main_window), "Tic Tac Toe");
 
@@ -699,6 +695,8 @@ static void main_menu(GtkWidget *widget, gpointer data)
 /* Initialise window and grid */
 static void setup(GtkApplication *app, gpointer user_data)
 {
+    GtkWidget *backgnd;
+    
     // init window
     main_window = gtk_application_window_new(app);
 
@@ -715,6 +713,11 @@ static void setup(GtkApplication *app, gpointer user_data)
     // init layout
     layout = gtk_fixed_new();
     gtk_window_set_child(GTK_WINDOW(main_window), layout);
+
+    /*init backgnd image*/
+    backgnd = gtk_image_new_from_file("resources/main-backgnd.png");
+    gtk_widget_set_size_request(backgnd, 720, 720);
+    gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
 
     main_layout();
 
