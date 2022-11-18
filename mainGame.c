@@ -37,11 +37,7 @@ static void two_player(GtkWidget *widget, gpointer data)
     struct Gamedata *gamedata = malloc(sizeof(*gamedata));
 
     gtk_window_set_title(GTK_WINDOW(main_window), "Two Player"); // change window title
-    clear_layout();
-
-    backgnd = gtk_image_new_from_file("resources/main-backgnd.png");
-    gtk_widget_set_size_request(backgnd, 720, 720);
-    gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
+    clear_layout("resources/main-backgnd.png");
 
     label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Enter Names (Max 10 characters)</span>");
@@ -107,11 +103,7 @@ static void single_player(GtkWidget *widget, gpointer data)
 
     gtk_window_set_title(GTK_WINDOW(main_window), "Single Player"); // change window title
 
-    clear_layout();
-
-    backgnd = gtk_image_new_from_file("resources/main-backgnd.png");
-    gtk_widget_set_size_request(backgnd, 720, 720);
-    gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
+    clear_layout("resources/main-backgnd.png");
 
     label = gtk_label_new("Choose your difficulty");
     gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Choose your difficulty</span>");
@@ -290,11 +282,7 @@ void gamescreen(struct Gamedata *gamedata)
     GtkWidget *backgnd, *button;
     int x = 100, y = 160, i = 0;
 
-    clear_layout();
-
-    backgnd = gtk_image_new_from_file("resources/game-backgnd.jpg");
-    gtk_widget_set_size_request(backgnd, 720, 720);
-    gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
+    clear_layout("resources/game-backgnd.jpg");
 
     /* draw grid lines */
     GtkWidget *area = gtk_drawing_area_new();
@@ -660,7 +648,7 @@ void main_layout()
     backgnd = gtk_image_new_from_file("resources/main-backgnd.png");
     gtk_widget_set_size_request(backgnd, 720, 720);
     gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
-
+    
     // window title
     gtk_window_set_title(GTK_WINDOW(main_window), "Tic Tac Toe");
 
@@ -702,7 +690,7 @@ static void main_menu(GtkWidget *widget, gpointer data)
         }
     }
 
-    clear_layout();
+    clear_layout("resources/main-backgnd.png");
 
     main_layout();
 }

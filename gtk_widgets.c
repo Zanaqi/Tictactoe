@@ -5,15 +5,18 @@
 GtkWidget *main_window;
 GtkWidget *layout;
 
-void clear_layout()
+void clear_layout(char *backgnd_resource)
 {
-    GtkWidget *childs;
+    GtkWidget *childs, *backgnd;
     childs = gtk_widget_get_first_child(layout);
     while (childs != NULL)
     {
         gtk_fixed_remove(GTK_FIXED(layout), childs);
         childs = gtk_widget_get_first_child(layout);
     }
+    backgnd = gtk_image_new_from_file(backgnd_resource);
+    gtk_widget_set_size_request(backgnd, 720, 720);
+    gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);
 }
 
 /* Function to show dialog */

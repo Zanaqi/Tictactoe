@@ -33,7 +33,7 @@ struct Gamedata
     int gamestate; // checkwin value
 };
 
-void clear_layout();
+void clear_layout(char *backgnd_resource);
 void showdialog(const char *title, const char *message);
 void placeWidget(GtkWidget *widget, int x, int y, int width, int height);
 void labels_state(int state, struct Gamedata *gamedata);
