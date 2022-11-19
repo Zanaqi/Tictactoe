@@ -610,6 +610,7 @@ static void replay(GtkWidget *widget, gpointer data)
         {
             /*if starting player is 1, change to 2 and vice versa*/
             gamedata->starting_player++;
+            gamedata->gamestate = 0;
 
             /* if single player and starting player is 1, change to computer start first*/
             if (gamedata->current_player == 3)
@@ -640,6 +641,8 @@ static void replay(GtkWidget *widget, gpointer data)
         else
         {
             gamedata->starting_player--;
+            gamedata->gamestate = 0;
+            
             if (gamedata->current_player != 3)
             {
                 gamedata->current_player = 1;
