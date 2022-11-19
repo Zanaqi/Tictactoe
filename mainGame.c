@@ -249,8 +249,8 @@ void computer_move(int player_move, struct Gamedata *gamedata)
 
     square[best_move] = COM_MARK; // update square array
 
-    GtkWidget *image = gtk_image_new_from_file("resources/O.png");
-    gtk_widget_set_parent(image, gamedata->square_btn[best_move]); // change button label to computer mark
+    GtkWidget *marker = gtk_image_new_from_file("resources/O.png");
+    gtk_widget_set_parent(marker, gamedata->square_btn[best_move]); // change button label to computer mark
 }
 
 /* To draw grid lines */
@@ -368,25 +368,25 @@ void gamescreen(struct Gamedata *gamedata)
 void winning_line(char winner, struct Gamedata *gamedata)
 {
     checkrow(); // get winning row values
-    GtkWidget *image;
+    GtkWidget *marker;
     if (winner == 'X')
     {
         for (int i = 0; i < 3; i++)
         {
-            image = gtk_image_new_from_file("resources/X_green.png"); // green 'x' image
-            /* Replace image */
+            marker = gtk_image_new_from_file("resources/X_green.png"); // green 'x' marker
+            /* Replace marker */
             gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[winning_row[i]]));
-            gtk_widget_set_parent(image, gamedata->square_btn[winning_row[i]]);
+            gtk_widget_set_parent(marker, gamedata->square_btn[winning_row[i]]);
         }
     }
     else if (winner == 'O')
     {
         for (int i = 0; i < 3; i++)
         {
-            image = gtk_image_new_from_file("resources/O_green.png"); // green 'O' image
-            /* Replace image */
+            marker = gtk_image_new_from_file("resources/O_green.png"); // green 'O' marker
+            /* Replace marker */
             gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[winning_row[i]]));
-            gtk_widget_set_parent(image, gamedata->square_btn[winning_row[i]]);
+            gtk_widget_set_parent(marker, gamedata->square_btn[winning_row[i]]);
         }
     }
 }
@@ -409,7 +409,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 
     if (square[index] != 'X' && square[index] != 'O') // empty square
     {
-        GtkWidget *image;
+        GtkWidget *marker;
 
         /* Two player */
         if (gamedata->current_player == 1) // player 1
@@ -418,8 +418,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'X';
 
             // mark square btn
-            image = gtk_image_new_from_file("resources/X.png");
-            gtk_widget_set_parent(image, widget);
+            marker = gtk_image_new_from_file("resources/X.png");
+            gtk_widget_set_parent(marker, widget);
 
             gamedata->gamestate = checkwin(); // check if game has ended
             if (gamedata->gamestate == 1)     // game ended, win
@@ -451,8 +451,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'O';
 
             // mark square btn
-            image = gtk_image_new_from_file("resources/O.png");
-            gtk_widget_set_parent(image, widget);
+            marker = gtk_image_new_from_file("resources/O.png");
+            gtk_widget_set_parent(marker, widget);
 
             gamedata->gamestate = checkwin(); // check if game has ended
             if (gamedata->gamestate == 1)     // game ended, win
@@ -486,8 +486,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             square[index] = 'X';
 
             // mark square btn
-            image = gtk_image_new_from_file("resources/X.png");
-            gtk_widget_set_parent(image, widget);
+            marker = gtk_image_new_from_file("resources/X.png");
+            gtk_widget_set_parent(marker, widget);
 
             gamedata->gamestate = checkwin(); // check if game has ended
             if (gamedata->gamestate == 1)     // game ended, win
@@ -571,7 +571,7 @@ static void replay(GtkWidget *widget, gpointer data)
         gtk_widget_set_sensitive(gamedata->square_btn[i], TRUE);
         if (square[i] == 'X' || square[i] == 'O')
         {
-            gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[i])); // remove image from square button
+            gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[i])); // remove marker from square button
             square[i] = i + '1';
         }
     }
