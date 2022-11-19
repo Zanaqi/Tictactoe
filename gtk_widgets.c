@@ -8,12 +8,16 @@ GtkWidget *layout;
 void clear_layout(char *backgnd_resource)
 {
     GtkWidget *childs, *backgnd;
+
+    /* Remove current child in layout*/
     childs = gtk_widget_get_first_child(layout);
     while (childs != NULL)
     {
         gtk_fixed_remove(GTK_FIXED(layout), childs);
         childs = gtk_widget_get_first_child(layout);
     }
+
+    /*Set background image*/
     backgnd = gtk_image_new_from_file(backgnd_resource);
     gtk_widget_set_size_request(backgnd, 720, 720);
     gtk_fixed_put(GTK_FIXED(layout), backgnd, 0, 0);

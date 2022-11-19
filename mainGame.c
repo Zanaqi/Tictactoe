@@ -21,7 +21,6 @@ static void square_clicked(GtkWidget *widget, gpointer data);
 
 void end_game(struct Gamedata *data);
 static void replay(GtkWidget *widget, gpointer data);
-// static void restart(GtkWidget *widget, gpointer data);
 
 void main_layout();
 static void main_menu(GtkWidget *widget, gpointer data);
@@ -92,6 +91,8 @@ static void two_player_gamescreen(GtkWidget *widget, gpointer data)
 static void single_player(GtkWidget *widget, gpointer data)
 {
     GtkWidget *backgnd, *label, *button;
+
+    /* Difficulty values */
     int *hard_ptr = malloc(sizeof(int));
     *hard_ptr = 3;
 
@@ -292,10 +293,12 @@ void gamescreen(struct Gamedata *gamedata)
     gtk_widget_set_opacity(area, 0.7);
     gtk_fixed_put(GTK_FIXED(layout), area, 100, 160);
 
+    /* Initialise scores */
     gamedata->tie_score = 0;
     gamedata->player2_score = 0;
     gamedata->player1_score = 0;
 
+    /* Initialise labels */
     gamedata->left_label = gtk_label_new("");
     gamedata->right_label = gtk_label_new("");
     gamedata->x_label = gtk_label_new("");
@@ -327,7 +330,7 @@ void gamescreen(struct Gamedata *gamedata)
     gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Main Menu</span>");
     placeWidget(button, 380, 100, 140, 40);
 
-    /* Align labels and attach to layout*/
+    /* Attach Labels to layout*/
 
     placeWidget(gamedata->x_label, 80, 40, 100, 20);
     placeWidget(gamedata->o_label, 540, 40, 100, 20);
@@ -348,7 +351,7 @@ void gamescreen(struct Gamedata *gamedata)
 
         placeWidget(gamedata->square_btn[i], x, y, 160, 160);
 
-        /*             positions for buttons           */
+        /*             Positions for buttons           */
         /*  |   100, 160  |   280,160  |   460,160  |  */
         /*  |   100, 340  |   280,340  |   460,340  |  */
         /*  |   100, 420  |   280,420  |   460,420  |  */
@@ -363,6 +366,7 @@ void gamescreen(struct Gamedata *gamedata)
     }
 }
 
+/* Function to be called if there is a winner, display winning line */
 void winning_line(char winner, struct Gamedata *gamedata)
 {
     checkrow(); // get winning row values
@@ -371,7 +375,8 @@ void winning_line(char winner, struct Gamedata *gamedata)
     {
         for (int i = 0; i < 3; i++)
         {
-            image = gtk_image_new_from_file("resources/X_green.png");
+            image = gtk_image_new_from_file("resources/X_green.png"); // green 'x' image
+            /* Replace image */
             gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[winning_row[i]]));
             gtk_widget_set_parent(image, gamedata->square_btn[winning_row[i]]);
         }
@@ -380,7 +385,8 @@ void winning_line(char winner, struct Gamedata *gamedata)
     {
         for (int i = 0; i < 3; i++)
         {
-            image = gtk_image_new_from_file("resources/O_green.png");
+            image = gtk_image_new_from_file("resources/O_green.png"); // green 'O' image
+            /* Replace image */
             gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[winning_row[i]]));
             gtk_widget_set_parent(image, gamedata->square_btn[winning_row[i]]);
         }
@@ -406,6 +412,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
     if (square[index] != 'X' && square[index] != 'O') // empty square
     {
         GtkWidget *image;
+
         /* Two player */
         if (gamedata->current_player == 1) // player 1
         {
@@ -434,7 +441,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
                 end_game(gamedata);
             else
             {
-                // game cont, change to player 2
+                // game continue, change to player 2
                 labels_state(2, gamedata); // grey player 1, bold player 2
 
                 gamedata->current_player++;
@@ -461,14 +468,13 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 
                 // update score
                 gamedata->player2_score++;
-
                 end_game(gamedata);
             }
             else if (gamedata->gamestate == 2)
                 end_game(gamedata);
             else
             {
-                // game cont, change to player 1
+                // game continue, change to player 1
                 labels_state(1, gamedata); // bold player 1, grey player 2
 
                 gamedata->current_player--;
@@ -501,6 +507,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
             }
             else if (gamedata->gamestate == 2) // game ended, draw
                 end_game(gamedata);
+
             else // game continue
             {
                 computer_move(index, gamedata);
@@ -526,19 +533,21 @@ static void square_clicked(GtkWidget *widget, gpointer data)
         showdialog("Invalid", "The square is in use!");
 }
 
-/* When game ends, set all square buttons to inactive, set replay button to be play again*/
+/* When game ends, set all square buttons to inactive, set replay button to be play again */
 void end_game(struct Gamedata *gamedata)
 {
     if (gamedata->gamestate == 2) // if tie
     {
         showdialog("Game draw", "It's a tie!");
         gamedata->tie_score++;
+
         // bold tie label
         gtk_label_set_markup(GTK_LABEL(gamedata->tie_label), "<span size = 'x-large'><b>Tie</b></span>");
 
-        labels_state(4, gamedata);
+        labels_state(4, gamedata); // grey player 1 and grey player 2
     }
 
+    /* bold score labels */
     gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player1_score));
     gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->tie_score));
     gtk_label_set_markup(GTK_LABEL(gamedata->right_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player2_score));
@@ -549,7 +558,7 @@ void end_game(struct Gamedata *gamedata)
         gtk_widget_set_sensitive(gamedata->square_btn[i], FALSE);
     }
 
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Play Again</span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Play Again</span>"); // change button label to play again
 }
 
 /* Function be called back when play again button is presed */
@@ -564,7 +573,7 @@ static void replay(GtkWidget *widget, gpointer data)
         gtk_widget_set_sensitive(gamedata->square_btn[i], TRUE);
         if (square[i] == 'X' || square[i] == 'O')
         {
-            gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[i]));
+            gtk_widget_unparent(gtk_widget_get_last_child(gamedata->square_btn[i])); // remove image from square button
             square[i] = i + '1';
         }
     }
@@ -584,7 +593,7 @@ static void replay(GtkWidget *widget, gpointer data)
 
     /* Set play again button back to restart */
     if (gamedata->gamestate != 0)
-        gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Restart</span>");
+        gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Restart</span>"); // change button label to restart
 
     if (gamedata->starting_player == 1)
     {
@@ -640,10 +649,10 @@ static void replay(GtkWidget *widget, gpointer data)
     }
 }
 
+/* Main Menu layout */
 void main_layout()
 {
     GtkWidget *button;
-
 
     // window title
     gtk_window_set_title(GTK_WINDOW(main_window), "Tic Tac Toe");
@@ -696,21 +705,21 @@ static void main_menu(GtkWidget *widget, gpointer data)
 static void setup(GtkApplication *app, gpointer user_data)
 {
     GtkWidget *backgnd;
-    
-    // init window
+
+    /* init window */
     main_window = gtk_application_window_new(app);
 
-    // initialise values
+    /* initialise values */
     for (int i = 0; i < 9; i++)
     {
         square[i] = i + '1';
     }
 
-    // set window size and turn resizable off
+    /* set window size and turn resizable off */
     gtk_window_set_default_size(GTK_WINDOW(main_window), 720, 720);
     gtk_window_set_resizable(GTK_WINDOW(main_window), FALSE);
 
-    // init layout
+    /* init layout */
     layout = gtk_fixed_new();
     gtk_window_set_child(GTK_WINDOW(main_window), layout);
 

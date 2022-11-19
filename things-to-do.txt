@@ -1,2 +1,0 @@
-- check on gui (backgnd, label placements, btn placements, readability, interactivity), should be more or less ok
-- code optimisation

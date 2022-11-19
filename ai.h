@@ -1,8 +1,6 @@
 #include "ttt.h"
 #define TOTAL 958
 
-extern char dataset[TOTAL][10];
-
 extern double pos_posterior;
 extern double neg_posterior;
 
@@ -15,7 +13,7 @@ extern double conditional_o[18];
 extern double conditional_b[18];
 
 void get_data();
-void train_dataset();
-void conditional_probability(char mark, int spot);
+void train_dataset(char dataset[][10]);
+void conditional_probability(char mark, int spot, char dataset[][10]);
+void test_data(char dataset[][10]);
 double calc_probability(char input_mark, int move, int store);
-void test_data();

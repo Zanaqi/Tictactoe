@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "ai.h"
 
-char dataset[TOTAL][10];
-
 double pos_posterior;
 double neg_posterior;
 
@@ -19,22 +17,22 @@ double conditional_b[18];
 /* FILE pointer to retrieve data from .data file, then sort array */
 void get_data()
 {
+    char dataset[TOTAL][10];
+    char raw_dataset[TOTAL][28]; // raw temporary data
+    int i = 0, k = 0, j = 0;
+    total_negative = 0.0;
+    total_positive = 0.0;
+    FILE *fPointer;
 
     printf("Tic Tac Toe\n\n");
     printf("Getting data from dataset...\n");
 
-    FILE *fPointer;
-    total_negative = 0.0;
-    total_positive = 0.0;
     if ((fPointer = fopen("tic-tac-toe.data", "r")) == NULL) // open file and check if it exists
     {
         printf("Error: data file could not be opened\n");
         exit(1);
     }
 
-    char raw_dataset[TOTAL][28]; // raw temporary data
-
-    int i = 0, k = 0, j = 0;
     while (fgets(raw_dataset[i], 28, fPointer) != NULL) // each line in dataset contains 28 characters
     {
         k = 0;
@@ -52,14 +50,14 @@ void get_data()
     fclose(fPointer); // close the file
 
     printf("Training data using Naive Bayes Algorithm...\n");
-    train_dataset();
+    train_dataset(dataset);
 
     printf("Data initialisation complete\n");
 
-    test_data();
+    test_data(dataset);
 }
 
-void test_data()
+void test_data(char dataset[][10])
 {
     double positive_prior = total_positive / 958.0;
     double negative_prior = total_negative / 958.0;
@@ -162,22 +160,22 @@ void test_data()
 }
 
 /* train data for all three occurances (x, o, b) */
-void train_dataset()
+void train_dataset(char dataset[][10])
 {
     int i = 0;
 
     for (i = 0; i < 9; i++)
-        conditional_probability('x', i); // P(x | n)
+        conditional_probability('x', i, dataset); // P(x | n)
 
     for (i = 0; i < 9; i++)
-        conditional_probability('o', i); // P(o | n)
+        conditional_probability('o', i, dataset); // P(o | n)
 
     for (i = 0; i < 9; i++)
-        conditional_probability('b', i); // P(b | n)
+        conditional_probability('b', i, dataset); // P(b | n)
 }
 
 /* calculate probability for training set */
-void conditional_probability(char train_mark, int spot)
+void conditional_probability(char train_mark, int spot, char dataset[][10])
 {
     int i = 0;
 
