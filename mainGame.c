@@ -168,45 +168,43 @@ void computer_move(int player_move, struct Gamedata *gamedata)
     int best_move = 0, i, best_score = -100, score;
     float chance = 0.0, best_chance = -1.0;
 
-    switch (gamedata->difficulty)
+    /* If computer start first, random move */
+    if (player_move == -1)
     {
-    /* Easy mode, randomm computer move */
-    case 1:
         int choice, success = 0;
         do
         {
             i = rand() % 8 + 1;                       // random number from 0 to 8
             if (square[i] != 'X' && square[i] != 'O') // if the random number choice is not occupied, exit while loop
+            {
                 success++;
+            }
         } while (success == 0);
         best_move = i;
-
-        break;
-
-    /* Medium mode, naive bayes */
-    case 2:
-        /*change mark to lowercase to match with dataset*/
-        char temp_player_mark = PLAYER_MARK + 32;
-        char temp_com_mark = COM_MARK + 32;
-
-        /* If computer start first, random move */
-        if (player_move == -1)
+    }
+    else
+    {
+        switch (gamedata->difficulty)
         {
+        /* Easy mode, randomm computer move */
+        case 1:
             int choice, success = 0;
             do
             {
                 i = rand() % 8 + 1;                       // random number from 0 to 8
                 if (square[i] != 'X' && square[i] != 'O') // if the random number choice is not occupied, exit while loop
-                {
                     success++;
-                }
             } while (success == 0);
             best_move = i;
 
             break;
-        }
-        else
-        {
+
+        /* Medium mode, naive bayes */
+        case 2:
+            /*change mark to lowercase to match with dataset*/
+            char temp_player_mark = PLAYER_MARK + 32;
+            char temp_com_mark = COM_MARK + 32;
+
             // calculate probability of computer winning based on player's move
             neg_posterior = calc_probability(temp_player_mark, player_move, 1);
 
@@ -223,30 +221,30 @@ void computer_move(int player_move, struct Gamedata *gamedata)
                     }
                 }
             }
-        }
-        // update probability
-        best_chance = calc_probability(temp_com_mark, best_move, 1);
-        break;
+            // update probability
+            best_chance = calc_probability(temp_com_mark, best_move, 1);
+            break;
 
-    /* Hard mode, minimax, not winnable*/
-    case 3:
-        for (i = 0; i < 9; i++)
-        {
-            if (square[i] != 'X' && square[i] != 'O') // if space is available
+        /* Hard mode, minimax, not winnable*/
+        case 3:
+            for (i = 0; i < 9; i++)
             {
-                square[i] = COM_MARK;  // temporarily place com_mark in square array index
-                score = minimax(0, 0); // minimise, depth 0
-                square[i] = i + '1';   // change square index back to the number (eg index 2 to '2')
-                if (score > best_score)
+                if (square[i] != 'X' && square[i] != 'O') // if space is available
                 {
-                    best_score = score;
-                    best_move = i;
+                    square[i] = COM_MARK;  // temporarily place com_mark in square array index
+                    score = minimax(0, 0); // minimise, depth 0
+                    square[i] = i + '1';   // change square index back to the number (eg index 2 to '2')
+                    if (score > best_score)
+                    {
+                        best_score = score;
+                        best_move = i;
+                    }
                 }
             }
+            break;
+        default:
+            break;
         }
-        break;
-    default:
-        break;
     }
 
     square[best_move] = COM_MARK; // update square array
@@ -642,7 +640,7 @@ static void replay(GtkWidget *widget, gpointer data)
         {
             gamedata->starting_player--;
             gamedata->gamestate = 0;
-            
+
             if (gamedata->current_player != 3)
             {
                 gamedata->current_player = 1;
