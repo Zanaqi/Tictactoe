@@ -174,7 +174,7 @@ void computer_move(int player_move, struct Gamedata *gamedata)
         int choice, success = 0;
         do
         {
-            i = rand() % 8 + 1;                       // random number from 0 to 8
+            i = rand() % 9;                           // random number from 0 to 8
             if (square[i] != 'X' && square[i] != 'O') // if the random number choice is not occupied, exit while loop
             {
                 success++;
@@ -191,7 +191,7 @@ void computer_move(int player_move, struct Gamedata *gamedata)
             int choice, success = 0;
             do
             {
-                i = rand() % 8 + 1;                       // random number from 0 to 8
+                i = rand() % 9;                           // random number from 0 to 8
                 if (square[i] != 'X' && square[i] != 'O') // if the random number choice is not occupied, exit while loop
                     success++;
             } while (success == 0);
