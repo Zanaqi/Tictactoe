@@ -21,8 +21,8 @@ struct Gamedata
     GtkWidget *tie_label;
     GtkWidget *tie_score_label;
 
-    const char *player1_name;
-    const char *player2_name;
+    gchar *player1_name;
+    gchar *player2_name;
     int player1_score; // score tracker for player 1
     int player2_score; // score tracker for player 2
     int tie_score;     // score tracker for tie

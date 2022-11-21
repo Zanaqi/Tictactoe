@@ -150,8 +150,8 @@ void singleplayer_gamescreen(GtkWidget *widget, gpointer data)
     gamedata->current_player = 3;
     gamedata->starting_player = 1;
 
-    gamedata->player1_name = "You";
-    gamedata->player2_name = "Computer";
+    gamedata->player1_name = g_strdup("You");
+    gamedata->player2_name = g_strdup("Computer");
 
     gamedata->left_label = gtk_label_new(""); // player, x
     gtk_label_set_markup(GTK_LABEL(gamedata->left_label), "<span size = 'x-large'>You</span>");
@@ -410,6 +410,7 @@ static void square_clicked(GtkWidget *widget, gpointer data)
     if (square[index] != 'X' && square[index] != 'O') // empty square
     {
         GtkWidget *marker;
+        gchar *winningmsg;
 
         /* Two player */
         if (gamedata->current_player == 1) // player 1
@@ -429,7 +430,11 @@ static void square_clicked(GtkWidget *widget, gpointer data)
                 if (g_strcmp0(gamedata->player1_name, "") == 0) // if player name is empty, use default name
                     showdialog("We have a winner!", "Player 1 win!");
                 else
-                    showdialog("We have a winner!", g_strdup_printf("%s win!", gamedata->player1_name));
+                {
+                    winningmsg = g_strdup_printf("%s win!", gamedata->player1_name);
+                    showdialog("We have a winner!", winningmsg);
+                    g_free(winningmsg);
+                }
 
                 // update score
                 gamedata->player1_score++;
@@ -462,7 +467,11 @@ static void square_clicked(GtkWidget *widget, gpointer data)
                 if (g_strcmp0(gamedata->player2_name, "") == 0) // if player name is empty, use default name
                     showdialog("We have a winner!", "Player 2 win!");
                 else
-                    showdialog("We have a winner!", g_strdup_printf("%s win!", gamedata->player2_name));
+                {
+                    winningmsg = g_strdup_printf("%s win!", gamedata->player2_name);
+                    showdialog("We have a winner!", winningmsg);
+                    g_free(winningmsg);
+                }
 
                 // update score
                 gamedata->player2_score++;
@@ -534,6 +543,8 @@ static void square_clicked(GtkWidget *widget, gpointer data)
 /* When game ends, set all square buttons to inactive, set replay button to be play again */
 void end_game(struct Gamedata *gamedata)
 {
+    gchar *left_text, *right_text, *tie_text;
+
     if (gamedata->gamestate == 2) // if tie
     {
         showdialog("Game draw", "It's a tie!");
@@ -546,9 +557,17 @@ void end_game(struct Gamedata *gamedata)
     }
 
     /* bold score labels */
-    gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player1_score));
-    gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->tie_score));
-    gtk_label_set_markup(GTK_LABEL(gamedata->right_score_label), g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player2_score));
+    left_text = g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player1_score);
+    tie_text = g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->tie_score);
+    right_text = g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player2_score);
+
+    gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), left_text);
+    gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), tie_text);
+    gtk_label_set_markup(GTK_LABEL(gamedata->right_score_label), right_text);
+
+    g_free(left_text);
+    g_free(tie_text);
+    g_free(right_text);
 
     for (int i = 0; i < 9; i++)
     {
@@ -681,11 +700,14 @@ void main_layout()
 /* main menu, allow player to choose between single player and two player mode */
 static void main_menu(GtkWidget *widget, gpointer data)
 {
-    if (data != NULL)
+    if (data != NULL) // if gamedata is available
     {
         struct Gamedata *gamedata = data;
-        /* reinitialise square array */
 
+        g_free(gamedata->player1_name);
+        g_free(gamedata->player2_name);
+
+        /* reinitialise square array */
         for (int i = 0; i < 9; i++)
         {
             if (square[i] == 'X' || square[i] == 'O')
@@ -694,6 +716,8 @@ static void main_menu(GtkWidget *widget, gpointer data)
                 square[i] = i + '1';
             }
         }
+
+        free(gamedata);
     }
 
     clear_layout("resources/main-backgnd.png");

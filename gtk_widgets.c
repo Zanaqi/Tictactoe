@@ -59,52 +59,72 @@ void placeWidget(GtkWidget *widget, int x, int y, int width, int height)
 
 void labels_state(int state, struct Gamedata *gamedata)
 {
+    gchar *first_text, *second_text, *third_text, *fourth_text;
 
-    if (state == 1) //  bold player 1, grey player 2
+    switch (state)
     {
-        // bold player 1
-        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large'><b>%s</b></span>", gamedata->player1_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large'><b><u>Player 1 (X)</u></b></span>");
+    case 1:
+        // bold player 1, grey player 2
+        first_text = g_strdup_printf("<span size = 'x-large'><b>%s</b></span>", gamedata->player1_name);
+        second_text = g_strdup("<span size = 'x-large'><b><u>Player 1 (X)</u></b></span>");
+        third_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player2_name);
+        fourth_text = g_strdup("<span size = 'x-large' foreground = 'grey'><u>Player 2 (O)</u></span>");
+        break;
 
-        // grey player 2
-        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player2_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large' foreground = 'grey'><u>Player 2 (O)</u></span>");
-    }
-    else if (state == 2) // grey player 1, bold player 2
-    {
-        // grey player 1
-        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player1_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large' foreground = 'grey'><u>Player 1 (X)</u></span>");
+    case 2:
+        // grey player 1, bold player 2
+        first_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player1_name);
+        second_text = g_strdup("<span size = 'x-large' foreground = 'grey'><u>Player 1 (X)</u></span>");
+        third_text = g_strdup_printf("<span size = 'x-large'><b>%s</b></span>", gamedata->player2_name);
+        fourth_text = g_strdup("<span size = 'x-large'><b><u>Player 2 (O)</u></b></span>");
+        break;
 
-        // bold player 2
-        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large'><b>%s</b></span>", gamedata->player2_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large'><b><u>Player 2 (O)</u></b></span>");
-    }
-    else if (state == 3) // player 1 and player 2 no markup
-    {
-        // player 1
-        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large'>%s</span>", gamedata->player1_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large'><u>Player 1 (X)</u></span>");
+    case 3:
+        // player 1 and 2 no difference
+        first_text = g_strdup_printf("<span size = 'x-large'>%s</span>", gamedata->player1_name);
+        second_text = g_strdup("<span size = 'x-large'><u>Player 1 (X)</u></span>");
+        third_text = g_strdup_printf("<span size = 'x-large'>%s</span>", gamedata->player2_name);
+        fourth_text = g_strdup("<span size = 'x-large'><u>Player 2 (O)</u></span>");
+        break;
 
-        // player 2
-        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large'>%s</span>", gamedata->player2_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large'><u>Player 2 (O)</u></span>");
-    }
-    else if (state == 4) // grey player 1 and grey player 2
-    {
-        // grey player 1
-        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player1_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), "<span size = 'x-large' foreground = 'grey'><u>Player 1 (X)</u></span>");
+    case 4:
+        // grey both player 1 and 2
+        first_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player1_name);
+        second_text = g_strdup("<span size = 'x-large' foreground = 'grey'><u>Player 1 (X)</u></span>");
+        third_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player2_name);
+        fourth_text = g_strdup("<span size = 'x-large' foreground = 'grey'><u>Player 2 (O)</u></span>");
+        break;
 
-        // grey player 2
-        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%s</span>", gamedata->player2_name));
-        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), "<span size = 'x-large' foreground = 'grey'><u>Player 2 (O)</u></span>");
+    case 5:
+        // grey score labels
+        first_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->player1_score);
+        second_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->player2_score);
+        third_text = g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->tie_score);
+        fourth_text = g_strdup("<span size = 'x-large' foreground = 'grey'>Tie</span>");
+        break;
     }
-    else if (state == 5) // grey score labels
+
+    switch (state) // set label
     {
-        gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->player1_score));
-        gtk_label_set_markup(GTK_LABEL(gamedata->right_score_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->player2_score));
-        gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), g_strdup_printf("<span size = 'x-large' foreground = 'grey'>%d</span>", gamedata->tie_score));
-        gtk_label_set_markup(GTK_LABEL(gamedata->tie_label), "<span size = 'x-large' foreground = 'grey'>Tie</span>");
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_label), first_text);
+        gtk_label_set_markup(GTK_LABEL(gamedata->x_label), second_text);
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_label), third_text);
+        gtk_label_set_markup(GTK_LABEL(gamedata->o_label), fourth_text);
+        break;
+
+    case 5:
+        gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), first_text);
+        gtk_label_set_markup(GTK_LABEL(gamedata->right_score_label), second_text);
+        gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), third_text);
+        gtk_label_set_markup(GTK_LABEL(gamedata->tie_label), fourth_text);
+        break;
     }
+    g_free(first_text);
+    g_free(second_text);
+    g_free(third_text);
+    g_free(fourth_text);
 }
