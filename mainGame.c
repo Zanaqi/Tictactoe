@@ -106,7 +106,7 @@ static void single_player(GtkWidget *widget, gpointer data)
 
     clear_layout("resources/main-backgnd.png");
 
-    label = gtk_label_new("Choose your difficulty");
+    label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Choose your difficulty</span>");
     placeWidget(label, 260, 200, 200, 30);
 
@@ -156,7 +156,7 @@ void singleplayer_gamescreen(GtkWidget *widget, gpointer data)
     gamedata->left_label = gtk_label_new(""); // player, x
     gtk_label_set_markup(GTK_LABEL(gamedata->left_label), "<span size = 'x-large'>You</span>");
 
-    gamedata->right_label = gtk_label_new("Computer"); // computer, o
+    gamedata->right_label = gtk_label_new(""); // computer, o
     gtk_label_set_markup(GTK_LABEL(gamedata->right_label), "<span size = 'x-large'>Computer</span>");
 
     gamescreen(gamedata);
