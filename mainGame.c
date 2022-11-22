@@ -38,8 +38,7 @@ static void two_player(GtkWidget *widget, gpointer data)
     gtk_window_set_title(GTK_WINDOW(main_window), "Two Player"); // change window title
     clear_layout("resources/main-backgnd.png");
 
-    label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Enter Names (Max 10 characters)</span>");
+    label = gtk_label_new("Enter Names (Max 10 characters)");
     placeWidget(label, 190, 200, 340, 30);
 
     /* Entries for players to key in names for labels in the game screen */
@@ -54,13 +53,13 @@ static void two_player(GtkWidget *widget, gpointer data)
     /* Start button */
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player_gamescreen), gamedata);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'green'><b>Start</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'green'><b>Start</b></span>");
     placeWidget(button, 280, 370, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     /* Back button to go back to main menu */
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'><b>Back</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<b>Back</b>");
     placeWidget(button, 50, 630, 100, 40);
 }
 
@@ -106,30 +105,29 @@ static void single_player(GtkWidget *widget, gpointer data)
 
     clear_layout("resources/main-backgnd.png");
 
-    label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(label), "<span size = 'large'>Choose your difficulty</span>");
+    label = gtk_label_new("Choose your difficulty");
     placeWidget(label, 260, 200, 200, 30);
 
     /* Difficulty buttons, each button links to different callback functions to change global variable 'difficulty' to change how computer plays*/
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(singleplayer_gamescreen), easy_ptr);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'green'><b>Easy</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'green'><b>Easy</b></span>");
     placeWidget(button, 280, 250, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(singleplayer_gamescreen), med_ptr);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'orange'><b>Medium</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'orange'><b>Medium</b></span>");
     placeWidget(button, 280, 310, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(singleplayer_gamescreen), hard_ptr);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'red'><b>Hard</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'red'><b>Hard</b></span>");
     placeWidget(button, 280, 370, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     /* Back button to go back to main menu*/
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'><b>Back</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<b>Back</b>");
     placeWidget(button, 50, 630, 100, 40);
 }
 
@@ -154,10 +152,10 @@ void singleplayer_gamescreen(GtkWidget *widget, gpointer data)
     gamedata->player2_name = g_strdup("Computer");
 
     gamedata->left_label = gtk_label_new(""); // player, x
-    gtk_label_set_markup(GTK_LABEL(gamedata->left_label), "<span size = 'x-large'>You</span>");
+    gtk_label_set_markup(GTK_LABEL(gamedata->left_label), "<span size = 'large'>You</span>");
 
     gamedata->right_label = gtk_label_new(""); // computer, o
-    gtk_label_set_markup(GTK_LABEL(gamedata->right_label), "<span size = 'x-large'>Computer</span>");
+    gtk_label_set_markup(GTK_LABEL(gamedata->right_label), "<span size = 'large'>Computer</span>");
 
     gamescreen(gamedata);
 }
@@ -318,23 +316,21 @@ void gamescreen(struct Gamedata *gamedata)
     labels_state(5, gamedata); // grey score labels
 
     /* play again button and main menu button */
-    gamedata->replay_btn = gtk_button_new_with_label("");
+    gamedata->replay_btn = gtk_button_new_with_label("Restart");
     g_signal_connect(gamedata->replay_btn, "clicked", G_CALLBACK(replay), gamedata);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Restart</span>");
     placeWidget(gamedata->replay_btn, 200, 100, 140, 40);
 
-    button = gtk_button_new_with_label("");
+    button = gtk_button_new_with_label("Main Menu");
     g_signal_connect(button, "clicked", G_CALLBACK(main_menu), gamedata);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large'>Main Menu</span>");
     placeWidget(button, 380, 100, 140, 40);
 
     /* Attach Labels to layout*/
 
-    placeWidget(gamedata->x_label, 80, 40, 100, 20);
-    placeWidget(gamedata->o_label, 540, 40, 100, 20);
-    placeWidget(gamedata->tie_label, 320, 60, 80, 20);
-    placeWidget(gamedata->left_label, 80, 60, 100, 20);
-    placeWidget(gamedata->right_label, 540, 60, 100, 20);
+    placeWidget(gamedata->x_label, 80, 30, 100, 20);
+    placeWidget(gamedata->o_label, 540, 30, 100, 20);
+    placeWidget(gamedata->tie_label, 320, 55, 80, 20);
+    placeWidget(gamedata->left_label, 80, 55, 100, 20);
+    placeWidget(gamedata->right_label, 540, 55, 100, 20);
     placeWidget(gamedata->tie_score_label, 320, 80, 80, 20);
     placeWidget(gamedata->left_score_label, 80, 80, 100, 20);
     placeWidget(gamedata->right_score_label, 540, 80, 100, 20);
@@ -551,15 +547,15 @@ void end_game(struct Gamedata *gamedata)
         gamedata->tie_score++;
 
         // bold tie label
-        gtk_label_set_markup(GTK_LABEL(gamedata->tie_label), "<span size = 'x-large'><b>Tie</b></span>");
+        gtk_label_set_markup(GTK_LABEL(gamedata->tie_label), "<span size = 'large'><b>Tie</b></span>");
 
         labels_state(4, gamedata); // grey player 1 and grey player 2
     }
 
     /* bold score labels */
-    left_text = g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player1_score);
-    tie_text = g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->tie_score);
-    right_text = g_strdup_printf("<span size = 'x-large'><b>%d</b></span>", gamedata->player2_score);
+    left_text = g_strdup_printf("<span size = 'large'><b>%d</b></span>", gamedata->player1_score);
+    tie_text = g_strdup_printf("<span size = 'large'><b>%d</b></span>", gamedata->tie_score);
+    right_text = g_strdup_printf("<span size = 'large'><b>%d</b></span>", gamedata->player2_score);
 
     gtk_label_set_markup(GTK_LABEL(gamedata->left_score_label), left_text);
     gtk_label_set_markup(GTK_LABEL(gamedata->tie_score_label), tie_text);
@@ -575,7 +571,7 @@ void end_game(struct Gamedata *gamedata)
         gtk_widget_set_sensitive(gamedata->square_btn[i], FALSE);
     }
 
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Play Again</span>"); // change button label to play again
+    gtk_label_set_text(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "Play Again"); // change button label to play again
 }
 
 /* Function be called back when play again button is presed */
@@ -610,7 +606,7 @@ static void replay(GtkWidget *widget, gpointer data)
 
     /* Set play again button back to restart */
     if (gamedata->gamestate != 0)
-        gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "<span size = 'large'>Restart</span>"); // change button label to restart
+        gtk_label_set_text(GTK_LABEL(gtk_widget_get_first_child(gamedata->replay_btn)), "Restart"); // change button label to restart
 
     if (gamedata->starting_player == 1)
     {
@@ -680,17 +676,17 @@ void main_layout()
     /* buttons */
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(single_player), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'green'><b>Single Player</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'green'><b>Single Player</b></span>");
     placeWidget(button, 280, 200, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect(button, "clicked", G_CALLBACK(two_player), NULL);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'orange'><b>Two Player</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'orange'><b>Two Player</b></span>");
     placeWidget(button, 280, 270, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     button = gtk_button_new_with_label("");
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_window_destroy), main_window);
-    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span size = 'large' foreground = 'red'><b>Quit</b></span>");
+    gtk_label_set_markup(GTK_LABEL(gtk_widget_get_first_child(button)), "<span foreground = 'red'><b>Quit</b></span>");
     placeWidget(button, 280, 340, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     neg_posterior = total_negative / TOTAL;
@@ -766,7 +762,7 @@ int main(int argc, char **argv)
 
     int status;
 
-    app = gtk_application_new("org.tic-tac-toe", G_APPLICATION_FLAGS_NONE);
+    app = gtk_application_new("org.tic-tac-toe", G_APPLICATION_DEFAULT_FLAGS);
 
     g_signal_connect(app, "activate", G_CALLBACK(setup), NULL);
     status = g_application_run(G_APPLICATION(app), argc, argv);
